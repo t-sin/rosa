@@ -13,5 +13,7 @@
             (return-from parse-name name)
             (progn
               (advance)
-              (bind (str (skip-while (lambda (c) t)))
-                (return-from parse-name (cons name str)))))))))
+              (bind (str (skip-while (lambda (c) (char= c #\:))))
+                (if (eofp)
+                    (return-from parse-name (cons name str))
+                    (return-from parse-name t)))))))))
