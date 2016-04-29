@@ -19,6 +19,7 @@
             ((2char= #\; #\;) (return% nil))
             ((2char= #\;) (return% t))
             ((2char= #\:)
+             (advance*)
              (bind (name (skip-until #'space-p))
                (if (eofp)
                    (return% name)
