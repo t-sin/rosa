@@ -1,4 +1,4 @@
-# Rosa - Simple named text markup language
+# Rosa - Simple markup language for named text
 
 ## Usage
 

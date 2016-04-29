@@ -4,7 +4,7 @@
 |#
 
 #|
-  Simple named text markup language
+  Simple markup language for named text
 
   Author: Shinichi TANAKA (shinichi.tanaka45@gmail.com)
 |#
@@ -23,7 +23,7 @@
   :components ((:module "src"
                 :components
                 ((:file "rosa"))))
-  :description "Simple named text markup language"
+  :description "Simple markup language for named text"
   :long-description
   #.(with-open-file (stream (merge-pathnames
                              #p"README.markdown"
