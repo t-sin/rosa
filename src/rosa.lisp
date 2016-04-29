@@ -1,7 +1,10 @@
 (in-package :cl-user)
 (defpackage rosa
   (:use :cl
-        :proc-parse))
+        :proc-parse)
+  (:import-from :anaphora
+                :aif
+                :it))
 (in-package :rosa)
 
 
@@ -28,3 +31,13 @@
                      (bind (str (skip-while #'true-with-char))
                        (return% (cons name str)))))))
             (t (return% nil))))))
+
+(defun add-to-name-list (name string name-list)
+  (flet ((set-to-name-list (value)
+           (setf (getf name-list name) value)
+           name-list))
+    (if name-list
+        (aif (getf name-list name)
+             (set-to-name-list (append it (list string)))
+             (set-to-name-list (list string)))
+        (set-to-name-list (list string)))))
