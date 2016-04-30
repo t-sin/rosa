@@ -37,7 +37,7 @@
             (t (return% nil))))))
 
 (defun run-through-stream (stream block-fn inline-fn)
-  (let* ((block-p t)
+  (let ((block-p t)
          (block-name *default-name*)
          (block-text))
     (labels ((to-keyword (s) (intern s :keyword))
@@ -64,7 +64,7 @@
                      (setf block-name *default-name*)))))))
 
 (defun trim-empty-string (strlist)
-  (let* ((start (position "" strlist :test-not #'string=))
+  (let ((start (position "" strlist :test-not #'string=))
          (end (position "" strlist :test-not #'string= :from-end t)))
     (cond ((and (null start) (null end)) nil)
           ((and (zerop start) (= (length strlist) end)) strlist)
@@ -86,10 +86,10 @@
 
 (defun peruse-from-stream (stream)
   (let ((named))
-    (labels ((add-block-to-named (block-name block-text)
-               (setf named (add-to-name-list block-name (stringify block-text) named)))
-             (add-inline-to-named (inline-name inline-text)
-               (setf named (add-to-name-list inline-name inline-text named))))
+    (flet ((add-block-to-named (block-name block-text)
+             (setf named (add-to-name-list block-name (stringify block-text) named)))
+           (add-inline-to-named (inline-name inline-text)
+             (setf named (add-to-name-list inline-name inline-text named))))
       (run-through-stream stream #'add-block-to-named #'add-inline-to-named)
       named)))
 
