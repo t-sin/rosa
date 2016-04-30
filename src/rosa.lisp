@@ -20,7 +20,7 @@
            (true-with-char (c) c))
       (cond ((2char= #\: #\:) (return% nil))
             ((2char= #\; #\;) (return% nil))
-            ((2char= #\;) (return% t))
+            ((2char= #\;) (return% :comment))
             ((2char= #\:)
              (advance*)
              (bind (name (skip-until #'space-p))
