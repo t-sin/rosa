@@ -80,12 +80,13 @@
                      (funcall inline-fn (to-keyword (car it)) (cdr it))
                      (setf block-name *default-name*)))))))
 
+(defun stringify (strlist)
+  (format nil "~{~a~^~%~}"
+          (nreverse (trim-empty-string strlist))))
+
 (defun peruse-from-stream (stream)
   (let ((named))
-    (labels ((stringify (strlist)
-               (format nil "~{~a~^~%~}"
-                       (nreverse (trim-empty-string strlist))))
-             (add-block-to-named (block-name block-text)
+    (labels ((add-block-to-named (block-name block-text)
                (setf named (add-to-name-list block-name (stringify block-text) named)))
              (add-inline-to-named (inline-name inline-text)
                (setf named (add-to-name-list inline-name inline-text named))))
