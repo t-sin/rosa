@@ -36,23 +36,6 @@
                        (return% (cons name str)))))))
             (t (return% nil))))))
 
-(defun add-to-name-list (name string name-list)
-  (flet ((set-to-name-list (value)
-           (setf (getf name-list name) value)
-           name-list))
-    (if name-list
-        (aif (getf name-list name)
-             (set-to-name-list (append it (list string)))
-             (set-to-name-list (list string)))
-        (set-to-name-list (list string)))))
-
-(defun trim-empty-string (strlist)
-  (let* ((start (position "" strlist :test-not #'string=))
-         (end (position "" strlist :test-not #'string= :from-end t)))
-    (cond ((and (null start) (null end)) nil)
-          ((and (zerop start) (= (length strlist) end)) strlist)
-          (t (subseq strlist start (1+ end))))))
-
 (defun run-through-stream (stream block-fn inline-fn)
   (let* ((block-p t)
          (block-name *default-name*)
@@ -80,9 +63,26 @@
                      (funcall inline-fn (to-keyword (car it)) (cdr it))
                      (setf block-name *default-name*)))))))
 
+(defun trim-empty-string (strlist)
+  (let* ((start (position "" strlist :test-not #'string=))
+         (end (position "" strlist :test-not #'string= :from-end t)))
+    (cond ((and (null start) (null end)) nil)
+          ((and (zerop start) (= (length strlist) end)) strlist)
+          (t (subseq strlist start (1+ end))))))
+
 (defun stringify (strlist)
   (format nil "~{~a~^~%~}"
           (nreverse (trim-empty-string strlist))))
+
+(defun add-to-name-list (name string name-list)
+  (flet ((set-to-name-list (value)
+           (setf (getf name-list name) value)
+           name-list))
+    (if name-list
+        (aif (getf name-list name)
+             (set-to-name-list (append it (list string)))
+             (set-to-name-list (list string)))
+        (set-to-name-list (list string)))))
 
 (defun peruse-from-stream (stream)
   (let ((named))
