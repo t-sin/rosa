@@ -53,25 +53,21 @@
           ((and (zerop start) (= (length strlist) end)) strlist)
           (t (subseq strlist start (1+ end))))))
 
-(defun read-text-from-stream (stream)
+(defun run-through-stream (stream block-fn inline-fn)
   (let* ((block-p t)
          (block-name *default-name*)
-         (block-text)
-         (name-list))
+         (block-text))
     (labels ((to-keyword (s) (intern s :keyword))
-             (stringify (strlist)
-               (format nil "~{~a~^~%~}" (nreverse (trim-empty-string strlist))))
              (end-of-block ()
                (when block-text
-                 (setf name-list
-                       (add-to-name-list block-name (stringify block-text) name-list)))
+                 (funcall block-fn block-name block-text))
                (setf block-p nil
                      block-name *default-name*
                      block-text nil)))
       (loop
          :for line := (read-line stream nil :eof)
          :until (eq line :eof)
-         :finally (end-of-block) (return name-list)
+         :finally (end-of-block)
          :do (atypecase (parse-name line)
                (keyword (end-of-block))
                (null (when block-p
@@ -81,6 +77,18 @@
                              block-name (to-keyword it)))
                (cons (when block-p
                        (end-of-block))
-                     (setf name-list
-                           (add-to-name-list (to-keyword (car it)) (cdr it) name-list)
-                           block-name *default-name*)))))))
+                     (funcall inline-fn (to-keyword (car it)) (cdr it))
+                     (setf block-name *default-name*)))))))
+
+(defun peruse-from-stream (stream)
+  (let ((named))
+    (labels ((stringify (strlist)
+               (format nil "~{~a~^~%~}"
+                       (nreverse (trim-empty-string strlist))))
+             (add-block-to-named (block-name block-text)
+               (setf named (add-to-name-list block-name (stringify block-text) named)))
+             (add-inline-to-named (inline-name inline-text)
+               (setf named (add-to-name-list inline-name inline-text named))))
+      (run-through-stream stream #'add-block-to-named #'add-inline-to-named)
+      named)))
+
