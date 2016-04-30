@@ -74,23 +74,23 @@
   (format nil "~{~a~^~%~}"
           (nreverse (trim-empty-string strlist))))
 
-(defun add-to-name-list (name string name-list)
-  (flet ((set-to-name-list (value)
-           (setf (getf name-list name) value)
-           name-list))
-    (if name-list
-        (aif (getf name-list name)
-             (set-to-name-list (append it (list string)))
-             (set-to-name-list (list string)))
-        (set-to-name-list (list string)))))
+(defun add-to-named (name string named)
+  (flet ((set-to-named (value)
+           (setf (getf named name) value)
+           named))
+    (if named
+        (aif (getf named name)
+             (set-to-named (append it (list string)))
+             (set-to-named (list string)))
+        (set-to-named (list string)))))
 
 (defun peruse-from-stream (stream)
   (let ((named))
     (flet ((add-block-to-named (block-name block-text)
              (when (trim-empty-string block-text)
-               (setf named (add-to-name-list block-name (stringify block-text) named))))
+               (setf named (add-to-named block-name (stringify block-text) named))))
            (add-inline-to-named (inline-name inline-text)
-             (setf named (add-to-name-list inline-name inline-text named))))
+             (setf named (add-to-named inline-name inline-text named))))
       (run-through-stream stream #'add-block-to-named #'add-inline-to-named)
       named)))
 
