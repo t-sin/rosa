@@ -4,9 +4,13 @@
         :proc-parse)
   (:import-from :anaphora
                 :aif
+                :atypecase
                 :it))
 (in-package :rosa)
 
+
+(defparameter *default-name* :|+nil+|)
+(defparameter *comment-name* :|+comment+|)
 
 (defun parse-name (line)
   (with-string-parsing (line)
@@ -41,3 +45,42 @@
              (set-to-name-list (append it (list string)))
              (set-to-name-list (list string)))
         (set-to-name-list (list string)))))
+
+(defun trim-empty-string (strlist)
+  (let* ((start (position "" strlist :test-not #'string=))
+         (end (position "" strlist :test-not #'string= :from-end t)))
+    (cond ((and (null start) (null end)) nil)
+          ((and (zerop start) (= (length strlist) end)) strlist)
+          (t (subseq strlist start (1+ end))))))
+
+(defun read-text-from-stream (stream)
+  (let* ((block-p t)
+         (block-name *default-name*)
+         (block-text)
+         (name-list))
+    (labels ((to-keyword (s) (intern s :keyword))
+             (stringify (strlist)
+               (format nil "~{~a~^~%~}" (nreverse (trim-empty-string strlist))))
+             (end-of-block ()
+               (when block-text
+                 (setf name-list
+                       (add-to-name-list block-name (stringify block-text) name-list)))
+               (setf block-p nil
+                     block-name *default-name*
+                     block-text nil)))
+      (loop
+         :for line := (read-line stream nil :eof)
+         :until (eq line :eof)
+         :finally (end-of-block) (return name-list)
+         :do (atypecase (parse-name line)
+               (keyword (end-of-block))
+               (null (when block-p
+                       (push line block-text)))
+               (string (end-of-block)
+                       (setf block-p t
+                             block-name (to-keyword it)))
+               (cons (when block-p
+                       (end-of-block))
+                     (setf name-list
+                           (add-to-name-list (to-keyword (car it)) (cdr it) name-list)
+                           block-name *default-name*)))))))
