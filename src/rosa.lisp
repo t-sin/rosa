@@ -5,7 +5,9 @@
   (:import-from :anaphora
                 :aif
                 :atypecase
-                :it))
+                :it)
+  (:export :peruse-from-stream
+           :find-from-stream))
 (in-package :rosa)
 
 
