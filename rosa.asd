@@ -4,7 +4,7 @@
 |#
 
 #|
-  Simple markup language for named text
+  Text parts with metadata
 
   Author: Shinichi TANAKA (shinichi.tanaka45@gmail.com)
 |#
@@ -23,7 +23,7 @@
   :components ((:module "src"
                 :components
                 ((:file "rosa"))))
-  :description "Simple markup language for named text"
+  :description "Simple markup language for text parts with metadata"
   :long-description
   #.(with-open-file (stream (merge-pathnames
                              #p"README.markdown"

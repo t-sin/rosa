@@ -1,4 +1,4 @@
-# Rosa - Simple markup language for text parts with metadata
+# Rosa - Text parts with metadata
 
 Rosa is a simple markup language for text parts with metadata.
 
