@@ -1,6 +1,6 @@
-# Rosa - Simple markup language for named text
+# Rosa - Simple markup language for text parts with metadata
 
-Rosa is a simple markup language to treat *named* text data.
+Rosa is a simple markup language for text parts with metadata.
 
 
 ## Basis
@@ -37,7 +37,7 @@ Let's see an example:
 
 :abstract
 
-Rosa is a simple markup language to treat *named* text data.
+Rosa is a simple markup language for text parts with metadata.
 
 :basis
 
