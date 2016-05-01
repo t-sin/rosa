@@ -33,7 +33,7 @@ Let's see an example:
 ```
 :title README for rosa
 :author Shinichi TANAKA
-:date 2014-05-01
+:date 2016-05-01
 
 :abstract
 
