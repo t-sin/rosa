@@ -7,7 +7,7 @@
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :rosa)' in your Lisp.
 
-(plan 1)
+(plan 4)
 
 (defvar *test-string* "
 
@@ -58,5 +58,23 @@ And **text** is a data named with **name**.
       :|title| ("Rosa - Text parts with metadata")
       :|+nil+| ("for default context")))
 
+(subtest "first space is a separater"
+  (is  (with-input-from-string (in *test-string*)
+         (find-from-stream in :|title|))
+       '("Rosa - Text parts with metadata")))
+
+(subtest "empty lines at head or tail are removed"
+  (is (with-input-from-string (in *test-string*)
+        (find-from-stream in :|abstract|))
+      '("Rosa is a simple markup language for text parts with metadata.")))
+
+(subtest "holds duplicates"
+  (is (with-input-from-string (in *test-string*)
+        (find-from-stream in :|date|))
+      '("2016-05-01" "date2"))
+  (is (elt (with-input-from-string (in *test-string*)
+             (find-from-stream in :|date|))
+           0)
+      "2016-05-01"))
 
 (finalize)
