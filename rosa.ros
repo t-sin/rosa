@@ -6,8 +6,9 @@ exec ros -Q -- $0 "$@"
 (defpackage :rosa.command
   (:use :cl))
 
-(ql:quickload :rosa)
-(ql:quickload :inquisitor)
+(ql:quickload :inquisitor :silent t)
+(ql:quickload :rosa :silent t)
+
 
 (in-package :rosa.command)
 
