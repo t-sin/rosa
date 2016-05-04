@@ -13,7 +13,6 @@ exec ros -Q -- $0 "$@"
 
 (defun usage ()
   (format *error-output* "Rosa - Simple markup ranguage for named text parts
-
 usage: rosa.ros [name] [file]
 
 DESCRIPTION
@@ -23,8 +22,9 @@ DESCRIPTION
 PARAMETERS
       name: required. target name. if supplied `:all`, output all pairs name
             and text as S expression.
-      file: not required. input files. if supplied `-` or input file does not
-            supplied, read from stdin."))
+      file: not required. input files. if not supplied, read data from stdin.
+
+"))
 
 (defun main (&rest argv)
   (declare (ignorable argv)))
