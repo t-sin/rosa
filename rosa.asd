@@ -4,7 +4,7 @@
 |#
 
 #|
-  Text parts with metadata
+  Simple markup language for named text parts
 
   Author: Shinichi TANAKA (shinichi.tanaka45@gmail.com)
 |#
@@ -18,12 +18,11 @@
   :version "0.1"
   :author "Shinichi TANAKA"
   :license "MIT"
-  :depends-on (:inquisitor
-               :proc-parse)
+  :depends-on (:proc-parse)
   :components ((:module "src"
                 :components
                 ((:file "rosa"))))
-  :description "Simple markup language for text parts with metadata"
+  :description "Simple markup language for named text parts"
   :long-description
   #.(with-open-file (stream (merge-pathnames
                              #p"README.markdown"

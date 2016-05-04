@@ -13,7 +13,7 @@
 
 for default context
 
-:title Rosa - Text parts with metadata
+:title Rosa - Named text parts
 :author Shinichi TANAKA
 :date 2016-05-01
 
@@ -24,15 +24,14 @@ ignored
 
 :abstract
 
-Rosa is a simple markup language for text parts with metadata.
+Rosa is a simple markup language for named text parts.
 
 :basis
 
 
 Rosa's *named text* is a pair of strings, consists of **name** and **text**.
 
-**Name** is a metadata.
-And **text** is a data named with **name**.
+**Name** is a name of **text**.
 **Text** is just one line string, or is multi line strings.
 
 ...
@@ -47,26 +46,25 @@ phew, english... I'm tired now...
       (peruse-from-stream in))
     '(:|basis| ("Rosa's *named text* is a pair of strings, consists of **name** and **text**.
 
-**Name** is a metadata.
-And **text** is a data named with **name**.
+**Name** is a name of **text**.
 **Text** is just one line string, or is multi line strings.
 
 ...")
-      :|abstract| ("Rosa is a simple markup language for text parts with metadata.")
+      :|abstract| ("Rosa is a simple markup language for named text parts.")
       :|date| ("2016-05-01" "date2")
       :|author| ("Shinichi TANAKA")
-      :|title| ("Rosa - Text parts with metadata")
+      :|title| ("Rosa - Named text parts")
       :|+nil+| ("for default context")))
 
 (subtest "first space is a separater"
   (is  (with-input-from-string (in *test-string*)
          (find-from-stream in :|title|))
-       '("Rosa - Text parts with metadata")))
+       '("Rosa - Named text parts")))
 
 (subtest "empty lines at head or tail are removed"
   (is (with-input-from-string (in *test-string*)
         (find-from-stream in :|abstract|))
-      '("Rosa is a simple markup language for text parts with metadata.")))
+      '("Rosa is a simple markup language for named text parts.")))
 
 (subtest "holds duplicates"
   (is (with-input-from-string (in *test-string*)

@@ -1,14 +1,13 @@
-# Rosa - Text parts with metadata
+# Rosa - Simple markup language for named text parts
 
-Rosa is a simple markup language for text parts with metadata.
+Rosa is a simple markup language for named text parts.
 
 
 ## Basis
 
 Rosa's *named text* is a pair of strings, consists of **name** and **text**.
 
-**Name** is a metadata.
-And **text** is a data named with **name**.
+**Name** is a name of **text**.
 **Text** is just one line string, or is multi line strings.
 
 A line starts with colon (`:`) denotes **name**.
@@ -37,14 +36,13 @@ Let's see an example:
 
 :abstract
 
-Rosa is a simple markup language for text parts with metadata.
+Rosa is a simple markup language for named text parts.
 
 :basis
 
 Rosa's *named text* is a pair of strings, consists of **name** and **text**.
 
-**Name** is a metadata.
-And **text** is a data named with **name**.
+**Name** is a name of **text**.
 **Text** is just one line string, or is multi line strings.
 
 ;comment
@@ -66,7 +64,7 @@ Two block **names** have following **texts**:
 - `abstract`:
 
 ```
-Rosa is a simple markup language to treat *named* text data.
+Rosa is a simple markup language for named text parts.
 ```
 
 - `basis`:
@@ -74,8 +72,7 @@ Rosa is a simple markup language to treat *named* text data.
 ```
 Rosa's *named text* is a pair of strings, consists of **name** and **text**.
 
-**Name** is a metadata.
-And **text** is a data named with **name**.
+**Name** is a name of **text**.
 **Text** is just one line string, or is multi line strings.
 ```
 
