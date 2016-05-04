@@ -1,0 +1,31 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -- $0 "$@"
+|#
+(defpackage :rosa.command
+  (:use :cl))
+
+(ql:quickload :rosa)
+(ql:quickload :inquisitor)
+
+(in-package :rosa.command)
+
+(defun useage ()
+  (format *standard-error* "Rosa - Simple markup ranguage for named text parts
+
+usage: rosa.ros [name] [file]
+
+DESCRIPTION
+    rosa.ros get text named [name] from [file] and output stdout.
+    now, rosa.ros only returned first text of all appearing.
+
+PARAMETERS
+      name: required. target name. if supplied `:all`, output all pairs name
+            and text as S expression.
+      file: not required. input files. if supplied `-` or input file does not
+            supplied, read from stdin."))
+
+(defun main (&rest argv)
+  (declare (ignorable argv)))
+;;; vim: set ft=lisp lisp:
