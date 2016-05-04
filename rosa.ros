@@ -11,8 +11,8 @@ exec ros -Q -- $0 "$@"
 
 (in-package :rosa.command)
 
-(defun useage ()
-  (format *standard-error* "Rosa - Simple markup ranguage for named text parts
+(defun usage ()
+  (format *error-output* "Rosa - Simple markup ranguage for named text parts
 
 usage: rosa.ros [name] [file]
 
