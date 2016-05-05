@@ -102,6 +102,58 @@ Then `rosa` returns a structure represented as S-expression.
 
 ## installation
 
+### For citizen of Land of Lisp
+
+For **citizen of Land of Lisp**, comrade, clone rosa into your load path and type the magic words `(ql:quickload :rosa)`.
+To install `rosa`, type `ros install rosa`.
+
+
+### For common user
+
+For common user, sorry, rosa has no binary for distribution now.
+We take your some munites, but installation is not too difficult, because of some great work.
+
+Brief install instruction is bellow (on Linux)
+
+```
+# Move to temporary directory (to build binary)
+$ cd ~/tmp
+
+# Install roswell to build rosa
+$ sudo apt install libcurl4-openssl-dev automake
+$ git clone https://github.com/roswell/roswell
+$ cd roswell
+$ ./bootstrap && make && sudo make install
+$ ros setup
+
+# install rosa
+$ cd ~/.roswell/local-projects
+$ git clone https://github.com/t-sin/rosa
+$ ros install rosa
+
+# test rosa
+$ rosa
+Rosa - Simple markup ranguage for named text parts
+usage: rosa.ros name [file]
+
+DESCRIPTION
+    rosa.ros get text named `name` from `file` and output stdout.
+    now, rosa.ros only returned first text of all appearing.
+
+PARAMETERS
+      name: required. target name. if supplied `:all`, output all pairs name
+            and text as S expression.
+      file: not required. input files. if not supplied, read data from stdin.
+
+```
+
+For detail, see some Common Lisp documents bellow:
+
+* [Roswell installation](https://github.com/roswell/roswell/wiki/1.-Installation)
+* [About roswell script](https://github.com/roswell/roswell/wiki/2.-Roswell-as-a-Scripting-Environment)
+
+
+
 ## author
 
 * shinichi tanaka (shinichi.tanaka45@gmail.com)
