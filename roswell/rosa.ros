@@ -14,10 +14,10 @@ exec ros -Q -- $0 "$@"
 
 (defun usage ()
   (format *error-output* "Rosa - Simple markup ranguage for named text parts
-usage: rosa.ros [name] [file]
+usage: rosa.ros name [file]
 
 DESCRIPTION
-    rosa.ros get text named [name] from [file] and output stdout.
+    rosa.ros get text named `name` from `file` and output stdout.
     now, rosa.ros only returned first text of all appearing.
 
 PARAMETERS
