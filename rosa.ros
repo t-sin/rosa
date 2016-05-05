@@ -27,16 +27,28 @@ PARAMETERS
 
 "))
 
+(defun pick-up (name stream)
+  (cond ((eq name :|all|) (rosa:peruse-from-stream stream))
+        (t (rosa:find-from-stream stream name))))
+
+(defun print-pretty (name obj)
+  (cond ((eq name :|all|) (format t "~s" obj))
+        (t (format t "~a" (first obj)))))
+
 (defun main (&rest argv)
   (declare (ignorable argv))
   (case (length argv)
     (0 (usage)
        (metashell:exit -1))
-    (1 (let ((name (elt argv 0)))
-         (format t "supplied name (~s)~%" name)))
-    (2 (let ((name (elt argv 0))
+    (1 (let ((name (intern (elt argv 0) :keyword)))
+         (print-pretty name (pick-up name *standard-input*))))
+    (2 (let ((name (intern (elt argv 0) :keyword))
              (file (elt argv 1)))
-         (format t "supplied name (~s) and file (~s)~%" name file)))
+         (with-open-file (in file
+                             :direction :input
+                             :external-format
+                             (inq:detect-external-format (pathname file) :jp))
+           (print-pretty name (pick-up name in)))))
     (t (usage)
        (metashell:exit -1))))
 ;;; vim: set ft=lisp lisp:
