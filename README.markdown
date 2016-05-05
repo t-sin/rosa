@@ -81,6 +81,25 @@ Note that the line starts with semicolon (`;comment`) is ignored.
 
 ## usage
 
+There is a CLI front-end for parse rosa markup language.
+`rosa` is it.
+Installation guide is told on the next chapter.
+
+Here is sypnosis for `rosa`:
+
+```
+$ rosa name [file]
+```
+
+Basically, text data come from stdin, specify `name` you want.
+If the target text is in a text file, additionaly specify `file`.
+
+When you need entire structure of target text, specify `:all` to `name`.
+Then `rosa` returns a structure represented as S-expression.
+
+(I think, It's convinient that, if specified `:yml` to `name` then `rosa.ros` returns a structure as YAML... But not implemented, yet)
+
+
 ## installation
 
 ## author
