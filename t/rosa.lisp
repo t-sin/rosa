@@ -56,6 +56,15 @@ phew, english... I'm tired now...
       :|title| ("Rosa - Named text parts")
       :|+nil+| ("for default context")))
 
+(subtest "empty lines"
+  (with-input-from-string (in "")
+    (is (peruse-from-stream in) nil)
+    (is (find-from-stream in :name) nil))
+  (with-input-from-string (in "
+")
+    (is (peruse-from-stream in) nil)
+    (is (find-from-stream in :name) nil)))
+
 (subtest "first space is a separater"
   (is  (with-input-from-string (in *test-string*)
          (find-from-stream in :|title|))
