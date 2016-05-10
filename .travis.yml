@@ -1,0 +1,25 @@
+language: common-lisp
+sudo: false
+
+env:
+  global:
+    - ROSWELL_ROOT=$HOME/.roswell
+    - PATH=$PATH:$ROSWELL_ROOT/bin
+  matrix:
+    - LISP=sbcl
+    - LISP=ccl-bin
+    - LISP=clisp
+    - LISP=abcl
+    - LISP=ecl
+
+install:
+  - curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
+  - ros install prove
+  - git clone https://github.com/t-sin/rosa.git
+
+before_script:
+  - ros --version
+  - ros config
+
+script:
+  - run-prove rosa-test.asd
