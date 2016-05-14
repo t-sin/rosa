@@ -1,5 +1,7 @@
 # Rosa - Simple markup language for named text parts
 
+[![Build Status](https://travis-ci.org/t-sin/rosa.svg)](https://travis-ci.org/t-sin/rosa)
+
 Rosa is a simple markup language for named text parts.
 
 
