@@ -7,7 +7,7 @@
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :rosa)' in your Lisp.
 
-(plan 4)
+(plan 7)
 
 (defvar *test-string* "
 
@@ -147,9 +147,22 @@ text
       (with-input-from-string (in s)
         (is (find-from-stream in :|name|) '("text")))))
 
-  (subtest "comments"))
+  (subtest "comments - starts with colon and ends with colon"
+    (let ((s ":ignored:
+text"))
+      (with-input-from-string (in s)
+        (is (peruse-from-stream in) nil))
+      (with-input-from-string (in s)
+        (is (find-from-stream in :|ignored|) nil)))
 
-(subtest "escape sequences")
+    (subtest "if line includes space, it's a inline text"
+      (let ((s ":not ignored:
+text"))
+      (with-input-from-string (in s)
+        (is (peruse-from-stream in) '(:|not| ("ignored:"))))
+      (with-input-from-string (in s)
+        (is (find-from-stream in :|not|) '("ignored:")))))))
+
 
 (subtest "holds duplicates"
   (let ((s ":name rose
@@ -169,5 +182,26 @@ Il nome della rosa"))
     (with-input-from-string (in s)
       (is (find-from-stream in :|title|)
           '("The name of the rose" "Il nome della rosa")))))
+
+(subtest "default name"
+  (let ((s "text"))
+    (with-input-from-string (in s)
+      (is (peruse-from-stream in) '(:|+nil+| ("text")))))
+  (let ((s "
+text
+"))
+    (with-input-from-string (in s)
+      (is (peruse-from-stream in) '(:|+nil+| ("text"))))))
+
+(subtest "escape sequences"
+  (let ((s "::plane"))
+    (with-input-from-string (in s)
+      (is (peruse-from-stream in) '(:|+nil+| ("::plane")))))
+  (let ((s ":text
+::line"))
+    (with-input-from-string (in s)
+      (is (peruse-from-stream in) '(:|text| ("::line"))))
+    (with-input-from-string (in s)
+      (is (find-from-stream in :|text|) '("::line")))))
 
 (finalize)
