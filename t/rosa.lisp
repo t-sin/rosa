@@ -56,32 +56,118 @@ phew, english... I'm tired now...
       :|title| ("Rosa - Named text parts")
       :|+nil+| ("for default context")))
 
-(subtest "empty lines"
-  (with-input-from-string (in "")
-    (is (peruse-from-stream in) nil)
-    (is (find-from-stream in :name) nil))
-  (with-input-from-string (in "
-")
-    (is (peruse-from-stream in) nil)
-    (is (find-from-stream in :name) nil)))
 
-(subtest "first space is a separater"
-  (is  (with-input-from-string (in *test-string*)
-         (find-from-stream in :|title|))
-       '("Rosa - Named text parts")))
+(subtest "empty text"
+  (let ((s ""))
+    (with-input-from-string (in s)
+      (is (peruse-from-stream in) nil))
+    (with-input-from-string (in s)
+      (is (find-from-stream in :name) nil)))
 
-(subtest "empty lines at head or tail are removed"
-  (is (with-input-from-string (in *test-string*)
-        (find-from-stream in :|abstract|))
-      '("Rosa is a simple markup language for named text parts.")))
+  (let ((s "
+"))
+    (with-input-from-string (in s)
+      (is (peruse-from-stream in) nil))
+    (with-input-from-string (in s)
+      (is (find-from-stream in :name) nil))))
+
+
+(subtest "inline text"
+  (subtest "first space is a separater"
+    (let ((s ":name text"))
+      (with-input-from-string (in s)
+        (is (peruse-from-stream in) '(:|name| ("text"))))
+      (with-input-from-string (in s)
+        (is (find-from-stream in :|name|) '("text")))))
+
+  (subtest "second or successor space is included text"
+    (let ((s ":name text1 text2"))
+      (with-input-from-string (in s)
+        (is (peruse-from-stream in) '(:|name| ("text1 text2"))))
+      (with-input-from-string (in s)
+        (is (find-from-stream in :|name|) '("text1 text2"))))))
+
+
+(subtest "block text"
+  (subtest "range of block text"
+    (let ((s ":name
+text"))
+      (with-input-from-string (in s)
+        (is (peruse-from-stream in) '(:|name| ("text"))))
+      (with-input-from-string (in s)
+        (is (find-from-stream in :|name|) '("text"))))
+
+    (let ((s ":name
+line1
+line2"))
+      (with-input-from-string (in s)
+        (is (peruse-from-stream in) '(:|name| ("line1
+line2"))))
+      (with-input-from-string (in s)
+        (is (find-from-stream in :|name|) '("line1
+line2"))))
+
+    (let ((s ":name
+line1
+line2
+:name2"))
+      (with-input-from-string (in s)
+        (is (peruse-from-stream in) '(:|name| ("line1
+line2"))))
+      (with-input-from-string (in s)
+        (is (find-from-stream in :|name|) '("line1
+line2")))))
+
+  (subtest "empty lines at head or tail are removed"
+    (let ((s ":name
+
+text
+"))
+      (with-input-from-string (in s)
+        (is (peruse-from-stream in) '(:|name| ("text"))))
+      (with-input-from-string (in s)
+        (is (find-from-stream in :|name|) '("text"))))
+
+    (let ((s ":name
+text
+
+"))
+      (with-input-from-string (in s)
+        (is (peruse-from-stream in) '(:|name| ("text"))))
+      (with-input-from-string (in s)
+        (is (find-from-stream in :|name|) '("text"))))
+
+        (let ((s ":name
+
+text
+
+"))
+      (with-input-from-string (in s)
+        (is (peruse-from-stream in) '(:|name| ("text"))))
+      (with-input-from-string (in s)
+        (is (find-from-stream in :|name|) '("text")))))
+
+  (subtest "comments"))
+
+(subtest "escape sequences")
 
 (subtest "holds duplicates"
-  (is (with-input-from-string (in *test-string*)
-        (find-from-stream in :|date|))
-      '("2016-05-01" "date2"))
-  (is (elt (with-input-from-string (in *test-string*)
-             (find-from-stream in :|date|))
-           0)
-      "2016-05-01"))
+  (let ((s ":name rose
+:name rosa"))
+    (with-input-from-string (in s)
+      (is (peruse-from-stream in) '(:|name| ("rose" "rosa"))))
+    (with-input-from-string (in s)
+      (is (find-from-stream in :|name|) '("rose" "rosa"))))
+  (let ((s ":title
+The name of the rose
+:title
+Il nome della rosa"))
+    (with-input-from-string (in s)
+      (is (peruse-from-stream in)
+          '(:|title| ("The name of the rose"
+                      "Il nome della rosa"))))
+    (with-input-from-string (in s)
+      (is (find-from-stream in :|title|)
+          '("The name of the rose" "Il nome della rosa")))))
 
 (finalize)
