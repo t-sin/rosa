@@ -1,0 +1,21 @@
+:title Syntax of Rosa
+:author Shinichi TANAKA
+:date 2016-05-22
+
+:body
+
+# Syntax of Rosa
+
+```
+<TEXT> ::= <ROSA_ELEMENT>*
+<ROSA_ELEMENT> ::= <PHRASE> | <COMMENT> | <ESCAPED> | <PARAGRAPH> | <PLAIN>
+
+<PHRASE> ::= <COLON> <NOT_COLON>* <SPACE> <EXCEPT_COLON_AND_SPACE>* <EOL>
+<COMMENT> ::= <COLON> <NOT_COLON>* <COLON> <EOL>
+<ESCAPED> ::= <COLON> <COLON> <CHAR>* <EOL>
+<PLAIN> ::= <EOL> | <NOT_COLON> <CHAR>* <EOL>
+
+<PARAGRAPH> ::= <PARAGRAPH_NAME> <PARAGRAPH_BODY>*
+<PARAGRAPH_NAME> ::= <COLON> <NOT_COLON>* <EOL>
+<PARAGRAPH_BODY> ::= <PLAIN> | <ESCAPED>
+```
