@@ -1,21 +1,27 @@
-:title Syntax of Rosa
-:author Shinichi TANAKA
-:date 2016-05-22
-
-:body
-
-# Syntax of Rosa
+# syntax as EBNF
 
 ```
-<TEXT> ::= <ROSA_ELEMENT>*
-<ROSA_ELEMENT> ::= <PHRASE> | <COMMENT> | <ESCAPED> | <PARAGRAPH> | <PLAIN>
+# special character
+<SPACE> ::= ? space (` `) ?
+<COLON> ::= ? colon (`:`) ?
+<SEMICOLON> ::= ? semicolon (`;`) ?
+<EOF> ::= ? end-of-file ?
+<EOL> ::= ? end-of-line (e.g. LF) ?
+<LABEL_IDENTIFER> ::= ? represented as regex `[a-z-]` ?
+<NOT_DELIMITER> ::= ? represent as regex `[^;:]` ?
+<ANYCHAR> ::= ? any charactor excluding <EOF> and <EOL> ?
 
-<PHRASE> ::= <COLON> <NOT_COLON>* <SPACE> <EXCEPT_COLON_AND_SPACE>* <EOL>
-<COMMENT> ::= <COLON> <NOT_COLON>* <COLON> <EOL>
-<ESCAPED> ::= <COLON> <COLON> <CHAR>* <EOL>
-<PLAIN> ::= <EOL> | <NOT_COLON> <CHAR>* <EOL>
+<TEXT> ::= <LINE>* <EOF>
+<LINE> ::= <ELEMENT> | <PLAIN> | <EOL>
+<ELEMENT> ::= <INLINE_LABEL> | <BLOCK_LABEL> | <COMMENT> | <ESCAPE>
+<ESCAPE> ::= <ESCAPE_COLON> | <ESCAPE_SEMICOLON>
 
-<PARAGRAPH> ::= <PARAGRAPH_NAME> <PARAGRAPH_BODY>*
-<PARAGRAPH_NAME> ::= <COLON> <NOT_COLON>* <EOL>
-<PARAGRAPH_BODY> ::= <PLAIN> | <ESCAPED>
+<INLINE_LABEL> ::= <COLON> <LABEL_IDENTIFER> <SPACE> <ANYCHAR>+ <EOL>
+<BLOCK_LABEL> ::= <COLON> <LABEL_IDENTIFER> <EOL>
+<COMMENT> ::= <SEMICOLON> <ANYCHAR>+ <EOL> | <SEMICOLON> <EOL>
+
+<ESCAPE_COLON> ::= <COLON> <COLON> <ANYCHAR>* <EOL>
+<ESCAPE_SEMICOLON> ::= <COLON> <SEMICOLON> <ANYCHAR>* <EOL>
+
+<PLAIN> ::= <NOT_DELIMITER> <ANYCHAR>* <EOL>
 ```
