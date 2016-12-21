@@ -7,201 +7,66 @@
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :rosa)' in your Lisp.
 
-(plan 7)
+(plan 4)
 
 (defvar *test-string* "
 
-for default context
+this liens are ignored.
 
-:title Rosa - Named text parts
+:title Rosa - text labeling language
 :author Shinichi TANAKA
 :date 2016-05-01
-
-:date date2
-
-ignored
-
+:date 2016-12-21
 
 :abstract
 
-Rosa is a simple markup language for named text parts.
+Rosa is a text labeling language.
 
-:basis
+:body
 
+Rosa is a language give key-value structure to text.
+In other words, rosa is a language that give one name to text block.
 
-Rosa's *named text* is a pair of strings, consists of **name** and **text**.
+Text written in rosa represent a ordered set of key-value pair.
 
-**Name** is a name of **text**.
-**Text** is just one line string, or is multi line strings.
-
-...
+Here, one pair in the set, it consist of **label** and **body**.
+**Label** is a name of **body**.
+We can consider **Label** as *key* and **body** as *value*.
 
 ;comment
 
-phew, english... I'm tired now...
+::key value
+:;phew, engrish... I'm tired now...
 
 ")
 
 (is (with-input-from-string (in *test-string*)
-      (peruse-from-stream in))
-    '(:|basis| ("Rosa's *named text* is a pair of strings, consists of **name** and **text**.
-
-**Name** is a name of **text**.
-**Text** is just one line string, or is multi line strings.
-
-...")
-      :|abstract| ("Rosa is a simple markup language for named text parts.")
-      :|date| ("2016-05-01" "date2")
+      (peruse in))
+    '(:|title| ("Rosa - Named text parts")
       :|author| ("Shinichi TANAKA")
-      :|title| ("Rosa - Named text parts")
-      :|+nil+| ("for default context")))
+      :|date| ("2016-05-01" "2016-12-21")
+      :|abstract| ("Rosa is a text labeling language.")
+      :|body| ("Rosa is a language give key-value structure to text.
+In other words, rosa is a language that give one name to text block.
 
+Text written in rosa represent a ordered set of key-value pair.
 
-(subtest "empty text"
-  (let ((s ""))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) nil))
-    (with-input-from-string (in s)
-      (is (find-from-stream in :name) nil)))
+Here, one pair in the set, it consist of **label** and **body**.
+**Label** is a name of **body**.
+We can consider **Label** as *key* and **body** as *value*.
 
-  (let ((s "
-"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) nil))
-    (with-input-from-string (in s)
-      (is (find-from-stream in :name) nil))))
+:key value
+;phew, engrish... I'm tired now...")))
 
+(is (with-input-from-string (in *test-string*)
+      (index in))
+    '(:|title| :|author| :|date| :|abstract| :|body|))
 
-(subtest "inline text"
-  (subtest "first space is a separater"
-    (let ((s ":name text"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text")))))
+(is (with-input-from-string (in *test-string*)
+      (pick in :|title|))
+    '("Rosa - Named text parts"))
 
-  (subtest "second or successor space is included text"
-    (let ((s ":name text1 text2"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text1 text2"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text1 text2"))))))
+(is (with-input-from-string (in *test-string*)
+      (pick in :|date|))
+    '("2016-05-01" "2016-12-21"))
 
-
-(subtest "block text"
-  (subtest "range of block text"
-    (let ((s ":name
-text"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text"))))
-
-    (let ((s ":name
-line1
-line2"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("line1
-line2"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("line1
-line2"))))
-
-    (let ((s ":name
-line1
-line2
-:name2"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("line1
-line2"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("line1
-line2")))))
-
-  (subtest "empty lines at head or tail are removed"
-    (let ((s ":name
-
-text
-"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text"))))
-
-    (let ((s ":name
-text
-
-"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text"))))
-
-        (let ((s ":name
-
-text
-
-"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text")))))
-
-  (subtest "comments - starts with colon and ends with colon"
-    (let ((s ":ignored:
-text"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) nil))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|ignored|) nil)))
-
-    (subtest "if line includes space, it's a inline text"
-      (let ((s ":not ignored:
-text"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|not| ("ignored:"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|not|) '("ignored:")))))))
-
-
-(subtest "holds duplicates"
-  (let ((s ":name rose
-:name rosa"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) '(:|name| ("rose" "rosa"))))
-    (with-input-from-string (in s)
-      (is (find-from-stream in :|name|) '("rose" "rosa"))))
-  (let ((s ":title
-The name of the rose
-:title
-Il nome della rosa"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in)
-          '(:|title| ("The name of the rose"
-                      "Il nome della rosa"))))
-    (with-input-from-string (in s)
-      (is (find-from-stream in :|title|)
-          '("The name of the rose" "Il nome della rosa")))))
-
-(subtest "default name"
-  (let ((s "text"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) '(:|+nil+| ("text")))))
-  (let ((s "
-text
-"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) '(:|+nil+| ("text"))))))
-
-(subtest "escape sequences"
-  (let ((s "::plane"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) '(:|+nil+| ("::plane")))))
-  (let ((s ":text
-::line"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) '(:|text| ("::line"))))
-    (with-input-from-string (in s)
-      (is (find-from-stream in :|text|) '("::line")))))
-
-(finalize)
