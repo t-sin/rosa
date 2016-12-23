@@ -39,7 +39,15 @@
     (is (peruse-as-plist ":label body") '(:|label| "body"))
     (is (peruse-as-plist ":label golden-body") '(:|label| "golden-body"))
     (is (peruse-as-plist ":label heart of gold") '(:|label| "heart of gold"))
-    (is (peruse-as-plist (format nil ":label so long~%and thanks for all the fish")) '(:|label| "so long"))))
+    (is (peruse-as-plist (format nil ":label so long~%and thanks for all the fish")) '(:|label| "so long"))
+
+    (subtest "special cases with labels"
+      (is (peruse-as-plist (format nil ":label so long~%:label2 and thanks for all the fish"))
+          '(:|label| "so long"
+            :|label2| "and thanks for all the fish"))
+      (is (peruse-as-plist (format nil ":label so long~%:label2~%and thanks for all the fish"))
+          '(:|label| "so long"
+            :|label2| "and thanks for all the fish")))))
 
 (subtest "block labels"
   (diag "block label is consists of two parts; label line and following body line(s)")
