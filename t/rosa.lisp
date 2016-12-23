@@ -9,6 +9,7 @@
 
 (plan 4)
 
+
 (defvar *test-string* "
 
 this liens are ignored.
@@ -40,13 +41,15 @@ We can consider **Label** as *key* and **body** as *value*.
 
 ")
 
+;;; peruse API; all data read at once.
 (is (with-input-from-string (in *test-string*)
       (peruse in))
-    '(:|title| ("Rosa - Named text parts")
-      :|author| ("Shinichi TANAKA")
-      :|date| ("2016-05-01" "2016-12-21")
-      :|abstract| ("Rosa is a text labeling language.")
-      :|body| ("Rosa is a language give key-value structure to text.
+    (let ((hash (make-hash-table)))
+      (setf (gethash :|title| #("Rosa - Named text parts")))
+      (setf (gethash :|author| #("Shinichi TANAKA")))
+      (setf (gethash :|date| #("2016-05-01" "2016-12-21")))
+      (setf (gethash :|abstract| #("Rosa is a text labeling language.")))
+      (setf (gethash :|body| #("Rosa is a language give key-value structure to text.
 In other words, rosa is a language that give one name to text block.
 
 Text written in rosa represent a ordered set of key-value pair.
@@ -57,16 +60,64 @@ We can consider **Label** as *key* and **body** as *value*.
 
 :key value
 ;phew, engrish... I'm tired now...")))
+      hash)
+    :test #'equalp)
 
+;;; peruse API; return eazy-to-use structure
+(is (with-input-from-string (in *test-string*)
+      (peruse-as-plist in))
+    '(:|title| "Rosa - Named text parts"
+      :|author| "Shinichi TANAKA"
+      :|date| "2016-05-01" "2016-12-21"
+      :|abstract| "Rosa is a text labeling language."
+      :|body| "Rosa is a language give key-value structure to text.
+In other words, rosa is a language that give one name to text block.
+
+Text written in rosa represent a ordered set of key-value pair.
+
+Here, one pair in the set, it consist of **label** and **body**.
+**Label** is a name of **body**.
+We can consider **Label** as *key* and **body** as *value*.
+
+:key value
+;phew, engrish... I'm tired now...")
+    :test #'equalp)
+
+;;; indexing API; listing labels.
 (is (with-input-from-string (in *test-string*)
       (index in))
-    '(:|title| :|author| :|date| :|abstract| :|body|))
+    #(:|title| :|author| :|date| :|abstract| :|body|)
+    :test #'equalp)
 
-(is (with-input-from-string (in *test-string*)
-      (pick in :|title|))
-    '("Rosa - Named text parts"))
-
+;;; picking up API; pickinck up body(ies) with specified label.
 (is (with-input-from-string (in *test-string*)
       (pick in :|date|))
-    '("2016-05-01" "2016-12-21"))
+    #("2016-05-01" "2016-12-21")
+    :test #'equalp)
 
+;;; skim *non-public* API; internal data representation
+(flet ((determine-position (string1 string2)
+         (let ((start (search string1 string2)))
+           (rosa::make-segment :start start
+                               :end (+ start (length string1))))))
+  (is (with-input-from-string (in *test-string*)
+        (rosa::skim in))
+      `(:|title| ,(determine-position "Rosa - Named text parts" *test-string*)
+         :|author| ,(determine-position "Shinichi TANAKA" *test-string*)
+         :|date| ,(determine-position "2016-05-01" "2016-12-21" *test-string*)
+         :|abstract| ,(determine-position "Rosa is a text labeling language." *test-string*)
+         :|body| ,(determine-position "Rosa is a language give key-value structure to text.
+In other words, rosa is a language that give one name to text block.
+
+Text written in rosa represent a ordered set of key-value pair.
+
+Here, one pair in the set, it consist of **label** and **body**.
+**Label** is a name of **body**.
+We can consider **Label** as *key* and **body** as *value*.
+
+:key value
+;phew, engrish... I'm tired now..." *test-string*))
+      :test #'equalp))
+
+
+(finalize)
