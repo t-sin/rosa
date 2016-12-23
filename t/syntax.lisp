@@ -71,7 +71,24 @@
     (is (peruse-as-plist (format nil ":ABCD~%is not read as label")) nil)
     (is (peruse-as-plist (format nil ":abCD~%is not read as label")) nil)
     (is (peruse-as-plist (format nil ":abcd_~%is not read as label")) nil)
-    (is (peruse-as-plist (format nil ":abCD~%is not read as label")) nil)))
+    (is (peruse-as-plist (format nil ":abCD~%is not read as label")) nil))
+
+  (subtest "body can include any lines except both kind of labels"
+    (is (peruse-as-plist (format nil ":label~%body")) '(:|label| "body"))
+    (is (peruse-as-plist (format nil ":label~%golden~%body"))
+        '(:|label| (format nil "golden~%body")))
+    (is (peruse-as-plist (format nil ":label~%heart of gold"))
+        '(:|label| "heart of gold"))
+    (is (peruse-as-plist (format nil ":label~%so long~%and thanks for all the fish"))
+        '(:|label| (format nil "so long~%and thanks for all the fish"))))
+
+  (subtest "special cases with labels"
+      (is (peruse-as-plist (format nil ":label~%so long~%:label2 and thanks for all the fish"))
+          '(:|label| "so long"
+            :|label2| "and thanks for all the fish"))
+      (is (peruse-as-plist (format nil ":label~%so long~%:label2~%and thanks for all the fish"))
+          '(:|label| "so long"
+            :|label2| "and thanks for all the fish"))))
 
 (subtest "comment")
 (subtest "escape sequences"
