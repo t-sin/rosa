@@ -90,7 +90,20 @@
           '(:|label| "so long"
             :|label2| "and thanks for all the fish"))))
 
-(subtest "comment")
+(subtest "comment"
+  (subtest "comment starts with colon, and are ignored"
+    (is (peruse-as-plist ";comment") nil)
+    (is (peruse-as-plist "; comment") nil))
+
+  (subtest "comments in block body are ignored"
+    (is (peruse-as-plist (format nil ":block~%oh,~%;comment~%deep thought."))
+        `(:|block| ,(format nil "~%oh,~%deep thought.")))
+    (is (peruse-as-plist (format nil ":block~%oh,~%;comment1~%;comment2~%deep thought."))
+        `(:|block| ,(format nil "~%oh,~%deep thought.")))
+    (is (peruse-as-plist (format nil ":block~%oh,~%;comment1~%deep~%;comment2~%thought."))
+        `(:|block| ,(format nil ":block~%oh,~%deep~%thought.")))
+    (is (peruse-as-plist (format nil ":block~%oh,~%;comment1~%deep thought.~%;comment2"))
+        `(:|block| ,(format nil ":block~%oh,~%deep thought.")))))
 (subtest "escape sequences"
   (subtest "colon escaping")
   (subtest "semicolon escaping"))
