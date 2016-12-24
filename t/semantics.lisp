@@ -1,9 +1,9 @@
 (in-package :cl-user)
-(defpackage rosa-syntax-test
+(defpackage rosa-semantics-test
   (:use :cl
         :rosa
         :prove))
-(in-package :rosa-syntax-test)
+(in-package :rosa-semantics-test)
 
 (plan 6)
 
