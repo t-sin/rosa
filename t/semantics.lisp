@@ -104,9 +104,35 @@
         `(:|block| ,(format nil ":block~%oh,~%deep~%thought.")))
     (is (peruse-as-plist (format nil ":block~%oh,~%;comment1~%deep thought.~%;comment2"))
         `(:|block| ,(format nil ":block~%oh,~%deep thought.")))))
+
 (subtest "escape sequences"
-  (subtest "colon escaping")
-  (subtest "semicolon escaping"))
+  (subtest "colon escaping"
+    (subtest "escaping is a plain line"
+      (is (peruse-as-plist ":: is colon") nil))
+
+    (subtest "colon escaping in block label"
+      (is (peruse-as-plist (format nil ":block~%:: is colon"))
+          `(:|block| ,(format nil ": is colon")))
+
+      (subtest "escaping is elable only at head of line"
+        (is (peruse-as-plist (format nil ":block~%::: is colon colon"))
+            `(:|block| ,(format nil ":: is colon colon")))
+        (is (peruse-as-plist (format nil ":block~% :: is colon colon"))
+            `(:|block| ,(format nil " :: is colon colon"))))))
+
+  (subtest "semicolon escaping"
+    (subtest "escaping is a plain line"
+      (is (peruse-as-plist ":: is colon") nil))
+
+    (subtest "semicolon escaping in block label"
+      (is (peruse-as-plist (format nil ":block~%:; is semicolon"))
+          `(:|block| ,(format nil "; is semicolon")))
+
+      (subtest "escaping is elable only at head of line"
+        (is (peruse-as-plist (format nil ":block~%:;; is semicolon semicolon"))
+            `(:|block| ,(format nil ";; is semicolon semicolon")))
+        (is (peruse-as-plist (format nil ":block~% ;; is semicolon semicolon"))
+            `(:|block| ,(format nil " ;; is semicolon semicolon")))))))
 
 
 (finalize)
