@@ -134,6 +134,12 @@
         (is (peruse-as-plist (format nil ":block~% ;; is semicolon semicolon"))
             `(:|block| ,(format nil " ;; is semicolon semicolon")))))))
 
+(subtest "plain line not in block are ignored"
+  (is (peruse-as-plist (format nil ":label text~%foo")) '(:|label| "text"))
+  (is (peruse-as-plist (format nil "foo~%:label text")) '(:|label| "text"))
+
+  (is (peruse-as-plist (format nil ""))))
+
 
 (finalize)
 
