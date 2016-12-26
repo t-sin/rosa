@@ -137,8 +137,11 @@
 (subtest "plain line not in block are ignored"
   (is (peruse-as-plist (format nil ":label text~%foo")) '(:|label| "text"))
   (is (peruse-as-plist (format nil "foo~%:label text")) '(:|label| "text"))
+  (is (peruse-as-plist (format nil "foo~%:label text~%bar")) '(:|label| "text"))
 
-  (is (peruse-as-plist (format nil ""))))
+  (is (peruse-as-plist (format nil ":label~%text~%foo")) '(:|label| "text"))
+  (is (peruse-as-plist (format nil "foo~%:label~%text")) '(:|label| "text"))
+  (is (peruse-as-plist (format nil "foo~%:label~%text~%bar")) '(:|label| "text")))
 
 
 (finalize)
