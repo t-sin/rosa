@@ -12,12 +12,23 @@
 
 (defstruct segment start end)
 
-(defun skim (stream))
+(defun skim (stream)
+  "read key-value data roughly **for internal**."
+  )
 
-(defun peruse-as-plist (stream))
 
-(defun peruse (stream))
+(defun peruse-as-plist (stream)
+  "read key-value data as plist."
+  )
 
-(defun index (stream))
+(defun peruse (stream)
+  "read key-value data."
+  )
 
-(defun pick (stream label))
+(defun index (stream)
+  "returns all keys in `stream`."
+  )
+
+(defun pick (stream label)
+  "returns value corresponded `label`."
+  )
