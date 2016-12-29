@@ -12,6 +12,7 @@
   :author "Shinichi TANAKA"
   :license "MIT"
   :depends-on (:rosa
+               :flexi-streams
                :prove)
   :components ((:module "t"
                 :components
