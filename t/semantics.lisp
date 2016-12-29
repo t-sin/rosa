@@ -20,7 +20,7 @@
 (subtest "inline labels"
   (diag "inline label is consists of two parts; label string and body string")
 
-  (subtest "inline label is represent as regexp `^:([a-z][a-z-]*) (.+)$`"
+  (subtest "inline label is represent as regexp `^:([a-z][a-z0-9-]*) (.+)$`"
     (is (peruse-as-plist ":abcd is read as label")
         '(:|abcd| "is read as label"))
     (is (peruse-as-plist ":abcd-efg is read as label")
@@ -52,13 +52,13 @@
 (subtest "block labels"
   (diag "block label is consists of two parts; label line and following body line(s)")
 
-  (subtest "block label is represent as regexp `^:([a-z][a-z-]*)$`"
+  (subtest "block label is represent as regexp `^:([a-z][a-z0-9-]*)$`"
     (diag "single appearance of label line is actually ignored")
     (is (peruse-as-plist (format nil ":abcd")) nil)
     (is (peruse-as-plist (format nil ":abcd-efg")) nil)
     (is (peruse-as-plist (format nil ":abcd-")) nil))
 
-  (subtest "block label is represent as regexp `^:([a-z][a-z-]*)$`"
+  (subtest "block label is represent as regexp `^:([a-z][a-z0-9-]*)$`"
     (is (peruse-as-plist (format nil ":abcd~%is read as label"))
         '(:|abcd| "is read as label"))
     (is (peruse-as-plist (format nil ":abcd-efg~%is read as label"))
