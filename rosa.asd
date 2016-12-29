@@ -19,7 +19,8 @@
   :author "Shinichi TANAKA"
   :license "MIT"
   :depends-on (:anaphora
-               :proc-parse)
+               :proc-parse
+               :trivial-gray-streams)
   :components ((:module "src"
                 :components
                 ((:file "rosa"))))
