@@ -98,35 +98,5 @@ We can consider **Label** as *key* and **body** as *value*.
     #("2016-05-01" "2016-12-21")
     :test #'equalp)
 
-;;; skim *non-public* API; internal data representation
-(flet ((determine-position (string1 string2)
-         (let ((start (search string1 string2)))
-           (rosa::make-segment :start start
-                               :end (+ start (length string1))))))
-  (is (flex:with-input-from-sequence (in *test-string*)
-        (rosa::skim in))
-      `(:|title| ,(determine-position "Rosa - text labeling language" *test-string*)
-         :|author| ,(determine-position "Shinichi TANAKA" *test-string*)
-         :|date| '(,(determine-position "2016-05-01" *test-string*)
-                   ,(determine-position "2016-12-21" *test-string*))
-         :|abstract| ,(determine-position "Rosa is a text labeling language." *test-string*)
-         :|body| ,(let* ((s "
-Rosa is a language give key-value structure to text.
-In other words, rosa is a language that give one name to text block.
-
-Text written in rosa represent a ordered set of key-value pair.
-
-Here, one pair in the set, it consist of **label** and **body**.
-**Label** is a name of **body**.
-We can consider **Label** as *key* and **body** as *value*.
-
-:key value
-;phew, engrish... I'm tired now...
-")
-                         (start (search (subseq s 0 100) *test-string*))
-                         (end (+ start (length s))))
-                    (rosa::make-segment :start start :end end)))
-      :test #'equalp))
-
 
 (finalize)
