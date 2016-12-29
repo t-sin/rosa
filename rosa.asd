@@ -23,7 +23,8 @@
                :trivial-gray-streams)
   :components ((:module "src"
                 :components
-                ((:file "rosa"))))
+                ((:file "parse")
+                 (:file "rosa" :depends-on ("parse")))))
   :description "Simple markup language for named text parts"
   :long-description
   #.(with-open-file (stream (merge-pathnames
