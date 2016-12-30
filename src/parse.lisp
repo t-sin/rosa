@@ -110,6 +110,13 @@
                  (write-char c out)
                  (read-to-eol)))))))
 
+(defun push-body (hash label body)
+  (let ((key (intern label :keyword)))
+    (if (gethash key hash)
+        (vector-push-extend body (gethash key hash))
+        (let ((val (make-array 1 :initial-element body :fill-pointer 1 :adjustable t)))
+          (setf (gethash key hash) val)))))
+
 (defun skim (stream)
   "read key-value data roughly **for internal**."
   (loop
@@ -122,5 +129,5 @@
              (read-label stream)
            (unless rest
              (if block-p
-                 (setf (gethash (intern label :keyword) data) (read-block stream))
-                 (setf (gethash (intern label :keyword) data) body))))))
+                 (push-body data label (read-block stream))
+                 (push-body data label body))))))
