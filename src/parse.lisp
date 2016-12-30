@@ -36,18 +36,23 @@
 
 (defun read-label-identifier (stream)
   (labels ((identifier-first-char-p (ch)
-             (or (char= ch #\-)
-                 (and (<= (char-code #\a) (char-code ch))
-                      (>= (char-code #\z) (char-code ch)))))
+             (or (and (<= (char-code #\a) (char-code ch))
+                      (>= (char-code #\z) (char-code ch)))
+                 (and (<= (char-code #\0) (char-code ch))
+                      (>= (char-code #\9) (char-code ch)))))
            (identifier-char-p (ch)
-             (and (identifier-first-char-p ch)
-                  (and (<= (char-code #\0) (char-code ch))
-                       (>= (char-code #\9) (char-code ch))))))
+             (or (identifier-first-char-p ch)
+                 (char= ch #\-))))
     (with-output-to-string (out)
       (loop
          :for c := (peek-char nil stream nil :eof)
+         :with first-p := t
          :while (and (not (eq c :eof))
-                     (identifier-first-char-p c))
+                     (if first-p
+                         (progn
+                           (setf first-p nil)
+                           (identifier-char-p c))
+                         (identifier-first-char-p c)))
          :do (write-char (read-char stream nil :eof) out)))))
 
 (defun read-label (stream)
