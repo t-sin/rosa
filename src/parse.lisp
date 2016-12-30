@@ -59,24 +59,26 @@
   "returns (block-p label body rest)"
   (cond-escape-sequence
    (lambda () (peek-char nil stream nil :eof))
-   (values nil nil nil)
-   (values nil nil nil)
+   (values nil nil nil (run-until-chars (#\newline) c stream out :read
+                         (write-char c out)))
+   (values nil nil nil (run-until-chars (#\newline) c stream out :read
+                         (write-char c out)))
    (let ((label (read-label-identifier stream))
          (ch (read-char stream nil :eof)))
-     (cond ((eq ch :eof)  ; block but next is EOF ;(
+     (cond ((eq ch :eof)                ; block but next is EOF ;(
             (return-from read-label (values t label nil nil)))
-           ((char= ch #\space)  ; inline
+           ((char= ch #\space)          ; inline
             (values nil label
                     (run-until-chars (#\newline) c stream out :read
                       (write-char c out))
                     nil))
-           ((char= ch #\newline)  ; truly, block
+           ((char= ch #\newline)        ; truly, block
             (values t label nil nil))
-           (t  ; regard invalid identifier as plain
-            (values nil nil nil
-                      (format nil "~a~c~a" label ch
-                              (run-until-chars (#\newline) c stream out :read
-                                (write-char c out)))))))))
+           (t                     ; regard invalid identifier as plain
+            (let* ((rest- (run-until-chars (#\newline) c stream out :read
+                            (write-char c out)))
+                   (rest (format nil "~a~c~a" label ch rest-)))
+              (values nil nil nil rest)))))))
 
 (defun read-block (stream)
   "returns body"
