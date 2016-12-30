@@ -118,14 +118,9 @@
      :until (eq c :eof)
      :finally (return-from skim data)
      :when (char= c #\:)
-     :do (format t "~s~%" c)
      :do (multiple-value-bind (block-p label body rest)
              (read-label stream)
-           (format t "~s ~s ~s ~s~%" block-p label body rest)
            (unless rest
-               (if block-p
-                   (setf (gethash (intern label :keyword) data) (read-block stream))
-                   (setf (gethash (intern label :keyword) data) body))))))
-
-
-#+nil((or (char= peek #\;) (char= peek #\:)) (read-escape stream))
+             (if block-p
+                 (setf (gethash (intern label :keyword) data) (read-block stream))
+                 (setf (gethash (intern label :keyword) data) body))))))
