@@ -81,32 +81,34 @@
               (values nil nil nil rest)))))))
 
 (defun read-block (stream)
-  "returns body"
-  (run-until-chars nil c stream out :peek
-    (flet ((skip-before-newline ()
+  "returns (body label-p)"
+  (run-until-chars nil c stream out :read
+    (flet ((skip-to-eol ()
              (run-until-chars (#\newline) ch1 stream nil :peek
                (funcall reader)))
-           (read-before-newline ()
+           (read-to-eol ()
              (run-until-chars (#\newline) ch2 stream nil :peek
-               (write-char (funcall reader) out))))
+               (write-char (funcall reader) out)))
+           (return-when-label-found ()
+             (return-from read-block
+               (values (get-output-stream-string out) t))))
       (cond ((eq c :eof) (return-from run-until-chars))
-            ((char= c #\newline)
-             (progn (funcall reader)
-                    (let ((ch (funcall peeker)))
-                      (cond ((eq ch :eof)
-                             (progn (terpri out)
-                                    (return-from run-until-chars)))
-                            ((char= ch #\newline) (terpri out))
-                            ((char= ch #\:)
-                             (progn (funcall reader)
-                                    (cond-escape-sequence peeker
-                                                          (return-from run-until-chars)
-                                                          (progn (terpri out)
-                                                                 (read-before-newline))
-                                                          (return-from run-until-chars))))
-                            ((char= ch #\;) (skip-before-newline))
-                            (t (format out "~c~c" #\newline (funcall reader)))))))
-            (t (write-char (funcall reader) out))))))
+            ((char= c #\newline) (multiple-value-bind (body label-p)
+                                     (read-block stream)
+                                   (unless (zerop (length body))
+                                     (format out "~%~a" body))
+                                   (when label-p
+                                       (return-when-label-found))))
+            ((char= c #\:) (cond-escape-sequence peeker
+                                                 (return-from run-until-chars)
+                                                 (read-to-eol)
+                                                 (progn
+                                                   (unread-char #\: stream)
+                                                   (return-when-label-found))))
+            ((char= c #\;) (skip-to-eol))
+            (t (progn
+                 (write-char c out)
+                 (read-to-eol)))))))
 
 (defun skim (stream)
   "read key-value data roughly **for internal**."
