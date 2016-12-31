@@ -41,7 +41,7 @@ We can consider **Label** as *key* and **body** as *value*.
 ")
 
 ;;; peruse API; all data read at once.
-(is (flex:with-input-from-sequence (in *test-string*)
+(is (with-input-from-string (in *test-string*)
       (peruse in))
     (let ((hash (make-hash-table)))
       (setf (gethash :|title| hash) #("Rosa - text labeling language"))
@@ -65,7 +65,7 @@ We can consider **Label** as *key* and **body** as *value*.
     :test #'equalp)
 
 ;;; peruse API; return eazy-to-use structure
-(is (flex:with-input-from-sequence (in *test-string*)
+(is (with-input-from-string (in *test-string*)
       (peruse-as-plist in))
     '(:|title| "Rosa - text labeling language"
       :|author| "Shinichi TANAKA"
@@ -87,13 +87,13 @@ We can consider **Label** as *key* and **body** as *value*.
     :test #'equalp)
 
 ;;; indexing API; listing labels.
-(is (flex:with-input-from-sequence (in *test-string*)
+(is (with-input-from-string (in *test-string*)
       (index in))
     #(:|title| :|author| :|date| :|abstract| :|body|)
     :test #'equalp)
 
 ;;; picking up API; pickinck up body(ies) with specified label.
-(is (flex:with-input-from-sequence (in *test-string*)
+(is (with-input-from-string (in *test-string*)
       (pick in :|date|))
     #("2016-05-01" "2016-12-21")
     :test #'equalp)
