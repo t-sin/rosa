@@ -2,12 +2,16 @@
 (defpackage rosa-test
   (:use :cl
         :rosa
-        :prove))
+        :prove)
+  (:import-from :flexi-streams
+                :make-flexi-stream
+                :string-to-octets
+                :with-input-from-sequence))
 (in-package :rosa-test)
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :rosa)' in your Lisp.
 
-(plan 4)
+(plan 5)
 
 
 (defvar *test-string* "
@@ -97,6 +101,11 @@ We can consider **Label** as *key* and **body** as *value*.
       (pick in :|date|))
     #("2016-05-01" "2016-12-21")
     :test #'equalp)
+
+;;; rosa supports gray streams
+(is (with-input-from-sequence (in (string-to-octets *test-string*))
+      (pick (make-flexi-stream in) :|rosa|))
+    "Rosa - text labeling language")
 
 
 (finalize)
