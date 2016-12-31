@@ -1,8 +1,9 @@
 (in-package :cl-user)
 (defpackage rosa
   (:use :cl
-        :proc-parse
         :trivial-gray-streams)
+  (:import-from :rosa.parse
+                :peruse)
   (:export :index
            :peruse
            :peruse-as-plist
@@ -14,9 +15,6 @@
   "read key-value data as plist."
   )
 
-(defun peruse (stream)
-  "read key-value data."
-  )
 
 (defun index (stream)
   "returns all keys in `stream`."

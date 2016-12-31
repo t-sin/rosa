@@ -2,7 +2,7 @@
 (defpackage rosa.parse
   (:use :cl
         :trivial-gray-streams)
-  (:export :skim))
+  (:export :peruse))
 (in-package :rosa.parse)
 
 
@@ -117,13 +117,13 @@
         (let ((val (make-array 1 :initial-element body :fill-pointer 1 :adjustable t)))
           (setf (gethash key hash) val)))))
 
-(defun skim (stream)
-  "read key-value data roughly **for internal**."
+(defun peruse (stream)
+  "read key-value data."
   (loop
      :for c := (read-char stream nil :eof)
      :with data := (make-hash-table)
      :until (eq c :eof)
-     :finally (return-from skim data)
+     :finally (return-from peruse data)
      :when (char= c #\:)
      :do (multiple-value-bind (block-p label body rest)
              (read-label stream)
