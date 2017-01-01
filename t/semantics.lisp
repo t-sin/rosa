@@ -142,11 +142,7 @@
 (subtest "plain line not in block are ignored"
   (perusing-test (format nil ":label text~%foo") '(:|label| #("text")))
   (perusing-test (format nil "foo~%:label text") '(:|label| #("text")))
-  (perusing-test (format nil "foo~%:label text~%bar") '(:|label| "text"))
-
-  (perusing-test (format nil ":label~%text~%foo") '(:|label| #("text")))
-  (perusing-test (format nil "foo~%:label~%text") '(:|label| #("text")))
-  (perusing-test (format nil "foo~%:label~%text~%bar") '(:|label| #("text"))))
+  (perusing-test (format nil "foo~%:label text~%bar") '(:|label| #("text"))))
 
 
 (finalize)
