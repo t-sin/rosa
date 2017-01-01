@@ -51,7 +51,9 @@ We can consider **Label** as *key* and **body** as *value*.
       (setf (gethash :|title| hash) #("Rosa - text labeling language"))
       (setf (gethash :|author| hash) #("Shinichi TANAKA"))
       (setf (gethash :|date| hash) #("2016-05-01" "2016-12-21"))
-      (setf (gethash :|abstract| hash) #("Rosa is a text labeling language."))
+      (setf (gethash :|abstract| hash) #("
+Rosa is a text labeling language.
+"))
       (setf (gethash :|body| hash) #("
 Rosa is a language give key-value structure to text.
 In other words, rosa is a language that give one name to text block.
@@ -74,7 +76,9 @@ We can consider **Label** as *key* and **body** as *value*.
     '(:|title| "Rosa - text labeling language"
       :|author| "Shinichi TANAKA"
       :|date| ("2016-05-01" "2016-12-21")
-      :|abstract| "Rosa is a text labeling language."
+      :|abstract| "
+Rosa is a text labeling language.
+"
       :|body| "
 Rosa is a language give key-value structure to text.
 In other words, rosa is a language that give one name to text block.
