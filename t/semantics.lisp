@@ -58,10 +58,10 @@
   (diag "block label is consists of two parts; label line and following body line(s)")
 
   (subtest "block label is represent as regexp `^:([a-z0-9][a-z0-9-]*)$`"
-    (diag "single appearance of label line is actually ignored")
-    (perusing-test (format nil ":abcd") nil)
-    (perusing-test (format nil ":abcd-efg") nil)
-    (perusing-test (format nil ":abcd-") nil))
+    (diag "single appearance of label line")
+    (perusing-test (format nil ":abcd") '(:|abcd| #("")))
+    (perusing-test (format nil ":abcd-efg") '(:|abcd-efg| #("")))
+    (perusing-test (format nil ":abcd-") '(:|abcd-| #(""))))
 
   (subtest "block label is represent as regexp `^:([a-z0-9][a-z0-9-]*)$`"
     (perusing-test (format nil ":abcd~%is read as label")
