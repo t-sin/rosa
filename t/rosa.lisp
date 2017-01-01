@@ -64,6 +64,7 @@ Here, one pair in the set, it consist of **label** and **body**.
 **Label** is a name of **body**.
 We can consider **Label** as *key* and **body** as *value*.
 
+
 :key value
 ;phew, engrish... I'm tired now...
 "))
@@ -88,6 +89,7 @@ Text written in rosa represent a ordered set of key-value pair.
 Here, one pair in the set, it consist of **label** and **body**.
 **Label** is a name of **body**.
 We can consider **Label** as *key* and **body** as *value*.
+
 
 :key value
 ;phew, engrish... I'm tired now...
