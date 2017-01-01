@@ -108,8 +108,9 @@ We can consider **Label** as *key* and **body** as *value*.
 
 ;;; rosa supports gray streams
 (is (with-input-from-sequence (in (string-to-octets *test-string*))
-      (pick (make-flexi-stream in) :|rosa|))
-    "Rosa - text labeling language")
+      (pick (make-flexi-stream in) :|title|))
+    #("Rosa - text labeling language")
+    :test #'equalp)
 
 
 (finalize)
