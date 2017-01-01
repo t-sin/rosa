@@ -60,8 +60,8 @@
                        (if first-p
                            (progn
                              (setf first-p nil)
-                             (identifier-char-p c))
-                           (identifier-first-char-p c)))
+                             (identifier-first-char-p c))
+                           (identifier-char-p c)))
            :do (write-char (funcall reader) out))))))
 
 (defun read-label (stream)
