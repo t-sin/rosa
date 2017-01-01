@@ -102,13 +102,13 @@
 
   (subtest "comments in block body are ignored"
     (perusing-test (format nil ":block~%oh,~%;comment~%deep thought.")
-        `(:|block| #(,(format nil "~%oh,~%deep thought."))))
+        `(:|block| #(,(format nil "oh,~%deep thought."))))
     (perusing-test (format nil ":block~%oh,~%;comment1~%;comment2~%deep thought.")
-        `(:|block| #(,(format nil "~%oh,~%deep thought."))))
+        `(:|block| #(,(format nil "oh,~%deep thought."))))
     (perusing-test (format nil ":block~%oh,~%;comment1~%deep~%;comment2~%thought.")
-        `(:|block| #(,(format nil ":block~%oh,~%deep~%thought."))))
+        `(:|block| #(,(format nil "oh,~%deep~%thought."))))
     (perusing-test (format nil ":block~%oh,~%;comment1~%deep thought.~%;comment2")
-        `(:|block| #(,(format nil ":block~%oh,~%deep thought."))))))
+        `(:|block| #(,(format nil "oh,~%deep thought."))))))
 
 (subtest "escape sequences"
   (subtest "colon escaping"
