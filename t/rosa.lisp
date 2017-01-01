@@ -97,7 +97,7 @@ We can consider **Label** as *key* and **body** as *value*.
 ;;; indexing API; listing labels.
 (is (with-input-from-string (in *test-string*)
       (index in))
-    #(:|title| :|author| :|date| :|abstract| :|body|)
+    '(:|title| :|author| :|date| :|abstract| :|body|)
     :test #'equalp)
 
 ;;; picking up API; pickinck up body(ies) with specified label.
