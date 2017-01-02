@@ -93,10 +93,7 @@
 (defun read-block (stream)
   "returns (body label-p)"
   (run-until-chars nil c stream out :read
-    (flet ((skip-to-eol ()
-             (run-until-chars (#\newline) ch1 stream nil :peek
-               (funcall reader)))
-           (read-to-eol ()
+    (flet ((read-to-eol ()
              (run-until-chars (#\newline) ch2 stream nil :peek
                (write-char (funcall reader) out)))
            (return-when-label-found ()
@@ -113,7 +110,7 @@
                                                  (return-from run-until-chars)
                                                  (read-to-eol)
                                                  (return-when-label-found)))
-            ((char= c #\;) (skip-to-eol))
+            ((char= c #\;) (run-until-chars (#\newline) ch1 stream nil :read))
             (t (progn
                  (write-char c out)
                  (read-to-eol)))))))
