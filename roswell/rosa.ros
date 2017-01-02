@@ -64,6 +64,15 @@ PICKING UP OPTIONS
 
 "))
 
+(defun find-format-type (argv)
+  (let ((types `((:sexp . ,(position "-s" argv :test #'string=))
+                 (:json . ,(position "-j" argv :test #'string=))
+                 (:yaml . ,(position "-y" argv :test #'string=)))))
+    (car (first (sort (remove-if-not #'numberp types :key #'cdr)
+                      (lambda (p1 p2) (<= p1 p2))
+                      :key #'cdr)))))
+        (nil (loop :for l :in labels :do (format t "~a~%" l)))))))
+
 (defun main (&rest argv)
   (if (< (length argv) 1)
       (progn
