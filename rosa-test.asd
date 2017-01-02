@@ -17,8 +17,9 @@
                :prove)
   :components ((:module "t"
                 :components
-                ((:test-file "rosa")
-                 (:test-file "semantics"))))
+                ((:file "util")
+                 (:test-file "rosa" :depends-on ("util"))
+                 (:test-file "semantics" :depends-on ("util")))))
   :description "Test system for rosa"
 
   :defsystem-depends-on (:prove-asdf)

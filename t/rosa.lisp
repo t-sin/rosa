@@ -2,6 +2,7 @@
 (defpackage rosa-test
   (:use :cl
         :rosa
+        :rosa-test-util
         :prove)
   (:import-from :alexandria
                 :set-equal)
@@ -96,7 +97,7 @@ We can consider **Label** as *key* and **body** as *value*.
 :key value
 ;phew, engrish... I'm tired now...
 "))
-    :test #'equalp)
+    :test #'plist-equal)
 
 ;;; indexing API; listing labels.
 (is (with-input-from-string (in *test-string*)

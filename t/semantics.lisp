@@ -2,6 +2,7 @@
 (defpackage rosa-semantics-test
   (:use :cl
         :rosa
+        :rosa-test-util
         :prove))
 (in-package :rosa-semantics-test)
 
@@ -10,7 +11,7 @@
 
 (defun perusing-test (actual expected)
   (with-input-from-string (in actual)
-    (is (peruse-as-plist in) expected :test #'equalp)))
+    (is (peruse-as-plist in) expected :test #'plist-equal)))
 
 (subtest "empty text returns empty data"
   (perusing-test "" nil)
