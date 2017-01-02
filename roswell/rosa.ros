@@ -6,9 +6,11 @@ exec ros -Q -- $0 "$@"
 (defpackage :rosa.command
   (:use :cl))
 
-(ql:quickload :inquisitor :silent t)
-(ql:quickload :rosa :silent t)
-(ql:quickload :trivial-shell :silent t)
+(ql:quickload '(:cl-yaml
+                :inquisitor
+                :jonathan
+                :rosa)
+              :silent t)
 
 (in-package :rosa.command)
 
@@ -62,24 +64,15 @@ PICKING UP OPTIONS
 
 "))
 
-(defun print-pretty (name obj)
-  (cond ((eq name :|all|) (format t "~s" obj))
-        (t (format t "~a" (first obj)))))
-
 (defun main (&rest argv)
-  (declare (ignorable argv))
-  (case (length argv)
-    (0 (usage)
-       (metashell:exit -1))
-    (1 (let ((name (intern (elt argv 0) :keyword)))
-         (print-pretty name (pick-up name *standard-input*))))
-    (2 (let ((name (intern (elt argv 0) :keyword))
-             (file (elt argv 1)))
-         (with-open-file (in file
-                             :direction :input
-                             :external-format
-                             (inq:detect-external-format (pathname file) :jp))
-           (print-pretty name (pick-up name in)))))
-    (t (usage)
-       (metashell:exit -1))))
+  (if (< (length argv) 1)
+      (progn
+        (print-usage)
+        (uiop:quit))
+      (let ((command (intern (string-upcase (nth 0 argv)) :keyword)))
+       (case command
+         (:list (format t "list!~%~%"))
+         (:pick (format t "picking up!~%~%"))
+         (:scan (format t "scan!~%~%"))
+         (t (format t "unknown command: ~s~%~%" (symbol-name command)))))))
 ;;; vim: set ft=lisp lisp:
