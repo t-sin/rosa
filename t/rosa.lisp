@@ -3,6 +3,8 @@
   (:use :cl
         :rosa
         :prove)
+  (:import-from :alexandria
+                :set-equal)
   (:import-from :flexi-streams
                 :make-flexi-stream
                 :string-to-octets
@@ -100,7 +102,7 @@ We can consider **Label** as *key* and **body** as *value*.
 (is (with-input-from-string (in *test-string*)
       (index in))
     '(:|title| :|author| :|date| :|abstract| :|body|)
-    :test #'equalp)
+    :test #'set-equal)
 
 ;;; picking up API; pickinck up body(ies) with specified label.
 (is (with-input-from-string (in *test-string*)
