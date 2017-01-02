@@ -112,9 +112,7 @@
             ((char= c #\:) (cond-escape-sequence peeker
                                                  (return-from run-until-chars)
                                                  (read-to-eol)
-                                                 (progn
-                                                   (funcall unreader #\:)
-                                                   (return-when-label-found))))
+                                                 (return-when-label-found)))
             ((char= c #\;) (skip-to-eol))
             (t (progn
                  (write-char c out)
@@ -130,15 +128,21 @@
 (defun peruse (stream)
   "read key-value data."
   (with-reader stream
-    (loop
-       :for c := (funcall reader)
-       :with data := (make-hash-table)
-       :until (eq c :eof)
-       :finally (return-from peruse data)
-       :when (char= c #\:)
-       :do (multiple-value-bind (block-p label body rest)
-               (read-label stream)
-             (unless rest
-               (if block-p
-                   (push-body data label (read-block stream))
-                   (push-body data label body)))))))
+    (let ((data (make-hash-table)))
+      (labels ((read-colon ()
+                 (multiple-value-bind (block-p label body rest)
+                     (read-label stream)
+                   (unless rest
+                     (if block-p
+                         (multiple-value-bind (body label-p)
+                             (read-block stream)
+                           (push-body data label body)
+                           (when label-p
+                             (read-colon)))
+                         (push-body data label body))))))
+        (loop
+           :for c := (funcall reader)
+           :until (eq c :eof)
+           :finally (return-from peruse data)
+           :when (char= c #\:)
+           :do (read-colon))))))
