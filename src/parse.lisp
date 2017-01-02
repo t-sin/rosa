@@ -93,23 +93,26 @@
 (defun read-block (stream)
   "returns (body label-p)"
   (run-until-chars nil c stream out :read
-    (flet ((read-to-eol ()
-             (run-until-chars (#\newline) ch2 stream nil :peek
-               (write-char (funcall reader) out)))
-           (return-when-label-found ()
-             (return-from read-block
-               (values (get-output-stream-string out) t))))
+    (labels ((read-to-eol ()
+               (run-until-chars (#\newline) ch2 stream nil :peek
+                 (write-char (funcall reader) out)))
+             (return-when-label-found ()
+               (return-from read-block
+                 (values (get-output-stream-string out) t)))
+             (when-eol ()
+               (multiple-value-bind (body label-p)
+                   (read-block stream)
+                 (when body
+                   (format out "~%~a" body))
+                 (when label-p
+                   (return-when-label-found)))))
       (cond ((eq c :eof) (return-from run-until-chars))
-            ((char= c #\newline) (multiple-value-bind (body label-p)
-                                     (read-block stream)
-                                   (unless (zerop (length body))
-                                     (format out "~%~a" body))
-                                   (when label-p
-                                       (return-when-label-found))))
+            ((char= c #\newline) (when-eol))
             ((char= c #\:) (cond-escape-sequence peeker
                                                  (return-from run-until-chars)
                                                  (read-to-eol)
-                                                 (return-when-label-found)))
+                                                 (return-from read-block
+                                                   (values nil t))))
             ((char= c #\;) (run-until-chars (#\newline) ch1 stream nil :read))
             (t (progn
                  (write-char c out)
