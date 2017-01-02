@@ -108,8 +108,10 @@
         `(:|block| #(,(format nil "oh,~%deep thought."))))
     (perusing-test (format nil ":block~%oh,~%;comment1~%deep~%;comment2~%thought.")
         `(:|block| #(,(format nil "oh,~%deep~%thought."))))
-    (perusing-test (format nil ":block~%oh,~%;comment1~%deep thought.~%;comment2")
-        `(:|block| #(,(format nil "oh,~%deep thought."))))
+
+    (subtest "when block ends with comment, block body includes eol..."
+     (perusing-test (format nil ":block~%oh,~%;comment1~%deep thought.~%;comment2")
+                    `(:|block| #(,(format nil "oh,~%deep thought.~%")))))
 
     (perusing-test (format nil ":block~%oh,~%~%;comment1~%~%deep thought.")
         `(:|block| #(,(format nil "oh,~%~%~%deep thought."))))))
