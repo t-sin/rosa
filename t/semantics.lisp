@@ -5,7 +5,7 @@
         :prove))
 (in-package :rosa-semantics-test)
 
-(plan 6)
+(plan 7)
 
 
 (defun perusing-test (actual expected)
@@ -146,6 +146,14 @@
   (perusing-test (format nil ":label text~%foo") '(:|label| #("text")))
   (perusing-test (format nil "foo~%:label text") '(:|label| #("text")))
   (perusing-test (format nil "foo~%:label text~%bar") '(:|label| #("text"))))
+
+(subtest "last eols"
+  (perusing-test (format nil ":block~%line1")
+                 `(:|block| #(,(format nil "line1"))))
+  (perusing-test (format nil ":block~%line1~%")
+                 `(:|block| #(,(format nil "line1~%"))))
+  (perusing-test (format nil ":block~%line1~%~%")
+                 `(:|block| #(,(format nil "line1~%~%")))))
 
 
 (finalize)
