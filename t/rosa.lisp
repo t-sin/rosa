@@ -74,13 +74,13 @@ We can consider **Label** as *key* and **body** as *value*.
 ;;; peruse API; return eazy-to-use structure
 (is (with-input-from-string (in *test-string*)
       (peruse-as-plist in))
-    '(:|title| "Rosa - text labeling language"
-      :|author| "Shinichi TANAKA"
-      :|date| ("2016-05-01" "2016-12-21")
-      :|abstract| "
+    '(:|title| #("Rosa - text labeling language")
+      :|author| #("Shinichi TANAKA")
+      :|date| #("2016-05-01" "2016-12-21")
+      :|abstract| #("
 Rosa is a text labeling language.
-"
-      :|body| "
+")
+      :|body| #("
 Rosa is a language give key-value structure to text.
 In other words, rosa is a language that give one name to text block.
 
@@ -93,7 +93,7 @@ We can consider **Label** as *key* and **body** as *value*.
 
 :key value
 ;phew, engrish... I'm tired now...
-")
+"))
     :test #'equalp)
 
 ;;; indexing API; listing labels.
