@@ -19,7 +19,6 @@
   :author "Shinichi TANAKA"
   :license "MIT"
   :depends-on (:anaphora
-               :proc-parse
                :trivial-gray-streams)
   :components ((:module "src"
                 :components
