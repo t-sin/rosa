@@ -64,24 +64,94 @@ PICKING UP OPTIONS
 
 "))
 
-(defun find-format-type (argv)
-  (let ((types `((:sexp . ,(position "-s" argv :test #'string=))
-                 (:json . ,(position "-j" argv :test #'string=))
-                 (:yaml . ,(position "-y" argv :test #'string=)))))
-    (car (first (sort (remove-if-not #'numberp types :key #'cdr)
-                      (lambda (p1 p2) (<= p1 p2))
-                      :key #'cdr)))))
-        (nil (loop :for l :in labels :do (format t "~a~%" l)))))))
+(defstruct option
+  command format-type pick-label pick-all pick-nth pathname)
+
+(defun error-and-exit (s)
+  (format t "~a~%~%" s)
+  (uiop:quit 1))
+
+(defun parse-argv (argv)
+  (let ((option (make-option)))
+    (flet ((optionp (a)
+             (char= (aref a 0) #\-))
+           (find-format-type (a)
+             (setf (option-format-type option)
+                   (cond ((string= a "-s") :sexp)
+                         ((string= a "-j") :json)
+                         ((string= a "-y") :yaml)))))
+      (let ((command (first argv)))
+        (if (or (not command)
+                (not (member command '("list" "pick" "scan") :test #'string=)))
+            (error-and-exit (format nil "unknown command: ~s" command))
+            (setf (option-command option)
+                  (intern (string-upcase command) :keyword))))
+      (loop
+         :for n :from 1 :below (length argv)
+         :with command := (option-command option)
+         :for a string := (nth n argv)
+         :do (if (optionp a)
+                 (cond ((member a '("-s" "-j" "-y") :test #'string=)
+                        (when (not (option-format-type option))
+                          (find-format-type a)))
+                       ((and (eq command :pick)
+                             (string= a "-a"))
+                        (setf (option-pick-all option) t))
+                       ((and (eq command :pick)
+                             (string= a "-n"))
+                        (incf n)
+                        (handler-case
+                            (setf (option-pick-nth option) (parse-integer (nth n argv)))
+                          (condition (c)
+                            (declare (ignore c))
+                            (print 'hogehoge)
+                            (error-and-exit (format nil "~s is not positive integer" a)))))
+                       (t (error-and-exit (format nil "unknown option: ~s" a))))
+                 (cond ((and (eq command :pick)
+                             (not (option-pick-label option)))
+                        (setf (option-pick-label option) (intern a :keyword)))
+                       (t (if (not (option-pathname option))
+                              (setf (option-pathname option) (pathname a))
+                              (error-and-exit "too many arguments"))))))
+      option)))
+
+(defmacro with-input ((var pathname) &body body)
+  `(if ,pathname
+       (if (probe-file ,pathname)
+           (with-open-file (,var ,pathname
+                            :direction :input
+                            :external-format (inq:make-external-format
+                                              :utf8
+                                              (inq:detect-end-of-line (pathname ,pathname))))
+             ,@body)
+           (error-and-exit (format nil "no such file: ~s" ,pathname)))
+       (let ((,var *standard-input*))
+         ,@body)))
+
+(defun list-labels (option)
+  (with-input (in (option-pathname option))
+    (let ((labels (rosa:index in)))
+      (case (option-format-type option)
+        (:sexp (format t "~s~%" labels))
+        (:json (format t "~a~%"
+                       (jojo:to-json (loop
+                                        :for l :in labels
+                                        :collect (symbol-name l)))))
+        (:yaml (format t "~a~%"
+                       (yaml:emit-to-string
+                        (loop
+                           :for l :in labels
+                           :collect (symbol-name l)))))
+        (t (loop :for l :in labels :do (format t "~a~%" l)))))))
 
 (defun main (&rest argv)
   (if (< (length argv) 1)
       (progn
         (print-usage)
         (uiop:quit))
-      (let ((command (intern (string-upcase (nth 0 argv)) :keyword)))
-       (case command
-         (:list (format t "list!~%~%"))
-         (:pick (format t "picking up!~%~%"))
-         (:scan (format t "scan!~%~%"))
-         (t (format t "unknown command: ~s~%~%" (symbol-name command)))))))
+      (let ((option (parse-argv argv)))
+        (case (option-command option)
+          (:list (list-labels option))
+          (:pick (format t "pick is not implemented~%"))
+          (:scan (format t "scan is not implemented~%"))))))
 ;;; vim: set ft=lisp lisp:
