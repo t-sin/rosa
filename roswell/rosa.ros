@@ -144,6 +144,28 @@ PICKING UP OPTIONS
                            :collect (symbol-name l)))))
         (t (loop :for l :in labels :do (format t "~a~%" l)))))))
 
+(defun pick-bodies (option)
+  (with-input (in (option-pathname option))
+    (flet ((print-body (body format-type)
+             (case format-type
+               (:sexp (format t "~s~%" body))
+               (:json (format t "~a~%" (jojo:to-json body)))
+               (:yaml (format t "~a~%" (yaml:emit-to-string body)))
+               (t (format t "~a~%" body))))
+           (expected-body (bodies)
+             (let ((pick-nth (option-pick-nth option)))
+               (handler-case
+                   (cond ((option-pick-all option) bodies)
+                         (pick-nth (aref bodies pick-nth))
+                         (t (aref bodies 0)))
+                 (condition (c)
+                   (error-and-exit (format nil "~a" c)))))))
+      (let* ((expected (expected-body (rosa:pick in (option-pick-label option)))))
+        (if (stringp expected)
+            (print-body expected nil)
+            (print-body expected
+                        (or (option-format-type option) :sexp)))))))
+
 (defun main (&rest argv)
   (if (< (length argv) 1)
       (progn
@@ -152,6 +174,6 @@ PICKING UP OPTIONS
       (let ((option (parse-argv argv)))
         (case (option-command option)
           (:list (list-labels option))
-          (:pick (format t "pick is not implemented~%"))
+          (:pick (pick-bodies option))
           (:scan (format t "scan is not implemented~%"))))))
 ;;; vim: set ft=lisp lisp:
