@@ -28,8 +28,8 @@ DESCRIPTION
     if not supplied `file`, rosa reads from standard input.
 
 COMMANDS
-    each commands have its shorthand; the first letter in your
-    heart. for instance, shorthand of `index` is `i`.
+    each commands have its shorthand; the first letter. for
+    instance, shorthand of `index` is `i`.
 
     rosa index [FILE]
         list all labels from input. by default, formatted as
