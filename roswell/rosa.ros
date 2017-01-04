@@ -28,6 +28,9 @@ DESCRIPTION
     if not supplied `file`, rosa reads from standard input.
 
 COMMANDS
+    each commands have its shorthand; the first letter in your
+    heart. for instance, shorthand of `index` is `i`.
+
     rosa index [FILE]
         list all labels from input. by default, formatted as
         line-based plain text.
@@ -67,6 +70,15 @@ PICKING UP OPTIONS
 (defstruct option
   command format-type pick-label pick-all pick-nth pathname)
 
+(defparameter +commands+
+  '((:index "i" "index")
+    (:pick "p" "pick")
+    (:dump "d" "dump")))
+
+(defun commandp (s)
+  (find s +commands+
+        :test #'(lambda (i s) (member i s :test #'string=))))
+
 (defun error-and-exit (s)
   (format t "~a~%~%" s)
   (uiop:quit 1))
@@ -80,12 +92,11 @@ PICKING UP OPTIONS
                    (cond ((string= a "-s") :sexp)
                          ((string= a "-j") :json)
                          ((string= a "-y") :yaml)))))
-      (let ((command (first argv)))
-        (if (or (not command)
-                (not (member command '("index" "pick" "dump") :test #'string=)))
-            (error-and-exit (format nil "unknown command: ~s" command))
-            (setf (option-command option)
-                  (intern (string-upcase command) :keyword))))
+      (let* ((s (first argv))
+             (command (first (commandp s))))
+        (if (or (not s) (not command))
+            (error-and-exit (format nil "unknown command: ~s" s))
+            (setf (option-command option) command)))
       (loop
          :for n :from 1 :below (length argv)
          :with command := (option-command option)
