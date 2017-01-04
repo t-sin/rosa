@@ -166,6 +166,20 @@ PICKING UP OPTIONS
             (print-body expected
                         (or (option-format-type option) :sexp)))))))
 
+(defun scan-all (option)
+  (with-input (in (option-pathname option))
+    (let ((format-type (or (option-format-type option) :sexp)))
+      (flet ((string-keyed-data ()
+               (let ((newhash (make-hash-table :test #'equal)))
+                 (maphash (lambda (k v)
+                            (setf (gethash (symbol-name k) newhash) v))
+                          (rosa:peruse in))
+                 newhash)))
+        (case format-type
+          (:sexp (format t "~s~%" (rosa:peruse-as-plist in)))
+          (:json (format t "~a~%" (jojo:to-json (rosa:peruse-as-plist in))))
+          (:yaml (format t "~a~%" (yaml:emit-to-string (string-keyed-data)))))))))
+
 (defun main (&rest argv)
   (if (< (length argv) 1)
       (progn
@@ -175,5 +189,5 @@ PICKING UP OPTIONS
         (case (option-command option)
           (:list (list-labels option))
           (:pick (pick-bodies option))
-          (:scan (format t "scan is not implemented~%"))))))
+          (:scan (scan-all option))))))
 ;;; vim: set ft=lisp lisp:
