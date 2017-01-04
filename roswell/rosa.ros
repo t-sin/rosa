@@ -17,9 +17,9 @@ exec ros -Q -- $0 "$@"
 
 (defun print-usage ()
   (format *error-output* "Rosa - text labeling language CLI
-usage: rosa list [OPTIONS] [FILE]
+usage: rosa index [OPTIONS] [FILE]
        rosa pick [OPTIONS] LABEL [FILE]
-       rosa scan [OPTIONS] [FILE]
+       rosa dump [OPTIONS] [FILE]
 
 DESCRIPTION
     rosa extract key-value structure from input. key as 'label'
@@ -28,7 +28,7 @@ DESCRIPTION
     if not supplied `file`, rosa reads from standard input.
 
 COMMANDS
-    rosa list [FILE]
+    rosa index [FILE]
         list all labels from input. by default, formatted as
         line-based plain text.
 
@@ -37,7 +37,7 @@ COMMANDS
         input. by default, rosa returns only first body of
         all appearance.
 
-    rosa scan [FILE]
+    rosa dump [FILE]
         parse and print entire key-value data from input.
 
 FORMATTING OPTIONS
@@ -82,7 +82,7 @@ PICKING UP OPTIONS
                          ((string= a "-y") :yaml)))))
       (let ((command (first argv)))
         (if (or (not command)
-                (not (member command '("list" "pick" "scan") :test #'string=)))
+                (not (member command '("index" "pick" "dump") :test #'string=)))
             (error-and-exit (format nil "unknown command: ~s" command))
             (setf (option-command option)
                   (intern (string-upcase command) :keyword))))
@@ -128,7 +128,7 @@ PICKING UP OPTIONS
        (let ((,var *standard-input*))
          ,@body)))
 
-(defun list-labels (option)
+(defun index-labels (option)
   (with-input (in (option-pathname option))
     (let ((labels (rosa:index in)))
       (case (option-format-type option)
@@ -166,7 +166,7 @@ PICKING UP OPTIONS
             (print-body expected
                         (or (option-format-type option) :sexp)))))))
 
-(defun scan-all (option)
+(defun dump-all (option)
   (with-input (in (option-pathname option))
     (let ((format-type (or (option-format-type option) :sexp)))
       (flet ((string-keyed-data ()
@@ -187,7 +187,7 @@ PICKING UP OPTIONS
         (uiop:quit))
       (let ((option (parse-argv argv)))
         (case (option-command option)
-          (:list (list-labels option))
+          (:index (index-labels option))
           (:pick (pick-bodies option))
-          (:scan (scan-all option))))))
+          (:dump (dump-all option))))))
 ;;; vim: set ft=lisp lisp:
