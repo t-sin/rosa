@@ -104,7 +104,6 @@ PICKING UP OPTIONS
                             (setf (option-pick-nth option) (parse-integer (nth n argv)))
                           (condition (c)
                             (declare (ignore c))
-                            (print 'hogehoge)
                             (error-and-exit (format nil "~s is not positive integer" a)))))
                        (t (error-and-exit (format nil "unknown option: ~s" a))))
                  (cond ((and (eq command :pick)
