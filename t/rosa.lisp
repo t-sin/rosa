@@ -2,206 +2,120 @@
 (defpackage rosa-test
   (:use :cl
         :rosa
-        :prove))
+        :rosa-test-util
+        :prove)
+  (:import-from :alexandria
+                :set-equal)
+  (:import-from :flexi-streams
+                :make-flexi-stream
+                :string-to-octets
+                :with-input-from-sequence))
 (in-package :rosa-test)
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :rosa)' in your Lisp.
 
-(plan 7)
+(plan 5)
+
 
 (defvar *test-string* "
 
-for default context
+this liens are ignored.
 
-:title Rosa - Named text parts
+:title Rosa - text labeling language
 :author Shinichi TANAKA
 :date 2016-05-01
-
-:date date2
-
-ignored
-
+:date 2016-12-21
 
 :abstract
 
-Rosa is a simple markup language for named text parts.
+Rosa is a text labeling language.
 
-:basis
+:body
 
+Rosa is a language give key-value structure to text.
+In other words, rosa is a language that give one name to text block.
 
-Rosa's *named text* is a pair of strings, consists of **name** and **text**.
+Text written in rosa represent a ordered set of key-value pair.
 
-**Name** is a name of **text**.
-**Text** is just one line string, or is multi line strings.
-
-...
+Here, one pair in the set, it consist of **label** and **body**.
+**Label** is a name of **body**.
+We can consider **Label** as *key* and **body** as *value*.
 
 ;comment
 
-phew, english... I'm tired now...
-
+::key value
+:;phew, engrish... I'm tired now...
 ")
 
+;;; peruse API; all data read at once.
 (is (with-input-from-string (in *test-string*)
-      (peruse-from-stream in))
-    '(:|basis| ("Rosa's *named text* is a pair of strings, consists of **name** and **text**.
-
-**Name** is a name of **text**.
-**Text** is just one line string, or is multi line strings.
-
-...")
-      :|abstract| ("Rosa is a simple markup language for named text parts.")
-      :|date| ("2016-05-01" "date2")
-      :|author| ("Shinichi TANAKA")
-      :|title| ("Rosa - Named text parts")
-      :|+nil+| ("for default context")))
-
-
-(subtest "empty text"
-  (let ((s ""))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) nil))
-    (with-input-from-string (in s)
-      (is (find-from-stream in :name) nil)))
-
-  (let ((s "
+      (peruse in))
+    (let ((hash (make-hash-table)))
+      (setf (gethash :|title| hash) #("Rosa - text labeling language"))
+      (setf (gethash :|author| hash) #("Shinichi TANAKA"))
+      (setf (gethash :|date| hash) #("2016-05-01" "2016-12-21"))
+      (setf (gethash :|abstract| hash) #("
+Rosa is a text labeling language.
 "))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) nil))
-    (with-input-from-string (in s)
-      (is (find-from-stream in :name) nil))))
+      (setf (gethash :|body| hash) #("
+Rosa is a language give key-value structure to text.
+In other words, rosa is a language that give one name to text block.
+
+Text written in rosa represent a ordered set of key-value pair.
+
+Here, one pair in the set, it consist of **label** and **body**.
+**Label** is a name of **body**.
+We can consider **Label** as *key* and **body** as *value*.
 
 
-(subtest "inline text"
-  (subtest "first space is a separater"
-    (let ((s ":name text"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text")))))
-
-  (subtest "second or successor space is included text"
-    (let ((s ":name text1 text2"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text1 text2"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text1 text2"))))))
-
-
-(subtest "block text"
-  (subtest "range of block text"
-    (let ((s ":name
-text"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text"))))
-
-    (let ((s ":name
-line1
-line2"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("line1
-line2"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("line1
-line2"))))
-
-    (let ((s ":name
-line1
-line2
-:name2"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("line1
-line2"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("line1
-line2")))))
-
-  (subtest "empty lines at head or tail are removed"
-    (let ((s ":name
-
-text
+:key value
+;phew, engrish... I'm tired now...
 "))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text"))))
+      hash)
+    :test #'equalp)
 
-    (let ((s ":name
-text
+;;; peruse API; return eazy-to-use structure
+(is (with-input-from-string (in *test-string*)
+      (peruse-as-plist in))
+    '(:|title| #("Rosa - text labeling language")
+      :|author| #("Shinichi TANAKA")
+      :|date| #("2016-05-01" "2016-12-21")
+      :|abstract| #("
+Rosa is a text labeling language.
+")
+      :|body| #("
+Rosa is a language give key-value structure to text.
+In other words, rosa is a language that give one name to text block.
 
+Text written in rosa represent a ordered set of key-value pair.
+
+Here, one pair in the set, it consist of **label** and **body**.
+**Label** is a name of **body**.
+We can consider **Label** as *key* and **body** as *value*.
+
+
+:key value
+;phew, engrish... I'm tired now...
 "))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text"))))
+    :test #'plist-equal)
 
-        (let ((s ":name
+;;; indexing API; listing labels.
+(is (with-input-from-string (in *test-string*)
+      (index in))
+    '(:|title| :|author| :|date| :|abstract| :|body|)
+    :test #'set-equal)
 
-text
+;;; picking up API; pickinck up body(ies) with specified label.
+(is (with-input-from-string (in *test-string*)
+      (pick in :|date|))
+    #("2016-05-01" "2016-12-21")
+    :test #'equalp)
 
-"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|name| ("text"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|name|) '("text")))))
+;;; rosa supports gray streams
+(is (with-input-from-sequence (in (string-to-octets *test-string*))
+      (pick (make-flexi-stream in) :|title|))
+    #("Rosa - text labeling language")
+    :test #'equalp)
 
-  (subtest "comments - starts with colon and ends with colon"
-    (let ((s ":ignored:
-text"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) nil))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|ignored|) nil)))
-
-    (subtest "if line includes space, it's a inline text"
-      (let ((s ":not ignored:
-text"))
-      (with-input-from-string (in s)
-        (is (peruse-from-stream in) '(:|not| ("ignored:"))))
-      (with-input-from-string (in s)
-        (is (find-from-stream in :|not|) '("ignored:")))))))
-
-
-(subtest "holds duplicates"
-  (let ((s ":name rose
-:name rosa"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) '(:|name| ("rose" "rosa"))))
-    (with-input-from-string (in s)
-      (is (find-from-stream in :|name|) '("rose" "rosa"))))
-  (let ((s ":title
-The name of the rose
-:title
-Il nome della rosa"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in)
-          '(:|title| ("The name of the rose"
-                      "Il nome della rosa"))))
-    (with-input-from-string (in s)
-      (is (find-from-stream in :|title|)
-          '("The name of the rose" "Il nome della rosa")))))
-
-(subtest "default name"
-  (let ((s "text"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) '(:|+nil+| ("text")))))
-  (let ((s "
-text
-"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) '(:|+nil+| ("text"))))))
-
-(subtest "escape sequences"
-  (let ((s "::plane"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) '(:|+nil+| ("::plane")))))
-  (let ((s ":text
-::line"))
-    (with-input-from-string (in s)
-      (is (peruse-from-stream in) '(:|text| ("::line"))))
-    (with-input-from-string (in s)
-      (is (find-from-stream in :|text|) '("::line")))))
 
 (finalize)
