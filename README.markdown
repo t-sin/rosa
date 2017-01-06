@@ -98,17 +98,33 @@ An ecample bellow:
 ```
 
 
-## usage
+## Usage
 
-There is a CLI front-end for parse rosa markup language.
+Rosa has a CLI front-end for parse rosa markup language.
 `rosa` is it.
-Installation guide is told on the next chapter.
+
+`rosa` can do three things:
+
+- listing labels in input
+- picking body up from input
+- dumping entire key-value structure from input
 
 Here is sypnosis for `rosa`:
 
 ```
-$ rosa name [file]
+$ rosa [OPTIONS] SUBCOMMAND [PARAMETERS]
 ```
+
+
+## Listing labels
+
+
+## Picking body up
+
+
+## Dumping structure
+
+-----
 
 Basically, text data come from stdin, specify `name` you want.
 If the target text is in a text file, additionaly specify `file`.
