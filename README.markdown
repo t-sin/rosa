@@ -82,11 +82,20 @@ This line is read.
 
 ### Escape sequences
 
-To denotes colon and semicolon themselves at line head, use escape sequence; is write twice the character.
+To denotes colon and semicolon themselves at line head, use escape sequence.
 
 For colon, this is it: `::`.
 
-For semicolon, this is it: `;;`.
+For semicolon, this is it: `:;`.
+
+An ecample bellow:
+
+```
+:text1
+
+:: is read as ':'
+:; is read as ';'
+```
 
 
 ### Example
