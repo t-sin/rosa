@@ -143,6 +143,10 @@ $ rosa pick [OPTIONS] LABEL [FILE]
 Pick up the body(ies) mapped with LABEL.
 By default, rosa returns only first body.
 
+If `-a` supplied, all bodies print as formatting type (see 'Output formatting').
+
+If `-n NUM` supplied, set a number of bodies picked up.
+
 
 #### Dumping entire pairs
 
