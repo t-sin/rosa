@@ -98,60 +98,6 @@ An ecample bellow:
 ```
 
 
-### Example
-
-Let's see an example:
-
-```
-:title README for rosa
-:author Shinichi TANAKA
-:date 2016-05-01
-
-:abstract
-
-Rosa is a simple markup language for named text parts.
-
-:basis
-
-Rosa's *named text* is a pair of strings, consists of **name** and **text**.
-
-**Name** is a name of **text**.
-**Text** is just one line string, or is multi line strings.
-
-;comment
-
-phew, english... I'm tired now...
-
-```
-
-`title`, `author`, `date`, `abstract` and `basis` are **names** included this examples.
-
-Three inline **names** have following **texts**:
-
-- `title`: `README for rosa`
-- `author`: `Shinichi TANAKA`
-- `date`: `2016-05-01`
-
-Two block **names** have following **texts**:
-
-- `abstract`:
-
-```
-Rosa is a simple markup language for named text parts.
-```
-
-- `basis`:
-
-```
-Rosa's *named text* is a pair of strings, consists of **name** and **text**.
-
-**Name** is a name of **text**.
-**Text** is just one line string, or is multi line strings.
-```
-
-Note that the line starts with semicolon (`;comment`) is ignored.
-
-
 ## usage
 
 There is a CLI front-end for parse rosa markup language.
