@@ -29,21 +29,52 @@ We can consider **Label** as *key* and **body** as *value*.
 ## Syntax
 
 Rosa has an ASCII-based and minimal syntax.
-For details, see `SYNTAX.md`.
+Here briefly describe rosa syntax.
+For BNF definition, see `SYNTAX.md`.
 
-A line starts with colon (`:`) denotes **name**.
-A line starts with semicolon (`;`) denotes **comment**.
+Rosa treats two characters at line head as special: `:` and `;`.
+**Label** line starts with colon (`:`).
+**Comment** line starts with semicolon (`;`).
 
-To denotes colon and semicolon themselves at line head, use escape sequence; is write twice the character.
-For colon, this is it: `::`.
-For semicolon, this is it: `;;`.
 
-If the line has space (` `), it is called **inline**.
-In this case, **name** is a string from next character of colon to previous character of first space, and **text** is a string from next character of first space to end of line. 
+### Labels
+
+Syntactically, these are two kind of **label**, distinguished by if the **body** includes newline.
+
+If the **body** has no newline, **label** called *inline*.
+Otherwise, **label** called *block*.
+
+When the *label line* has space, it is regarded as *inline* label.
+**Label** and **body** separated with first appeared space (` `).
 
 If the line has no space, it is called **block**.
-In this case, **name** is a string from next character of colon to end of line.
-**text** is successor lines until appears one of **inline** name, **block** name or **comment**. 
+**Label** and **body** separated with first appeared newline.
+
+For instance, see below how to write two kind of labels:
+
+```
+:label1 this is first body of inline label
+:label2
+
+this is a body of block label.
+
+:label1 this is second body of inline label
+```
+
+Twice or more appearance of **label** is allowed, because of each **body** stored in one array with appearance order.
+
+
+### Comments
+
+
+
+### Escape sequences
+
+To denotes colon and semicolon themselves at line head, use escape sequence; is write twice the character.
+
+For colon, this is it: `::`.
+
+For semicolon, this is it: `;;`.
 
 
 ### Example
