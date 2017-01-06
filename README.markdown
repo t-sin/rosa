@@ -112,9 +112,10 @@ Rosa has a CLI front-end for parse rosa markup language.
 Here is synopsis for `rosa`:
 
 ```
-$ rosa SUBCOMMAND [OPTIONS] [PARAMETERS]
+$ rosa SUBCOMMAND [OPTIONS] [PARAMETERS] [FILE]
 ```
 
+If FILE is not supplied, rosa reads from standard input.
 
 ## Listing labels
 
