@@ -109,7 +109,7 @@ Rosa has a CLI front-end for parse rosa markup language.
 - picking body up from input
 - dumping entire key-value structure from input
 
-Here is sypnosis for `rosa`:
+Here is synopsis for `rosa`:
 
 ```
 $ rosa SUBCOMMAND [OPTIONS] [PARAMETERS]
