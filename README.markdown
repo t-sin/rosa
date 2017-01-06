@@ -117,13 +117,46 @@ $ rosa SUBCOMMAND [OPTIONS] [PARAMETERS] [FILE]
 
 If FILE is not supplied, rosa reads from standard input.
 
-## Listing labels
+
+### Subcommands
+
+Subcommands has its shorthand; the first letter.
+For instance, shorthand of `index` is `i`.
 
 
-## Picking body up
+#### Listing labels
+
+```
+$ rosa index [OPTIONS] [FILE]
+```
+
+List all labels in FILE.
+By default, output formatted as plain text.
 
 
-## Dumping entire pairs
+#### Picking body up
+
+```
+$ rosa pick [OPTIONS] LABEL [FILE]
+```
+
+Pick up the body(ies) mapped with LABEL.
+By default, rosa returns only first body.
+
+
+#### Dumping entire pairs
+
+```
+$ rosa dump [OPTIONS] [FILE]
+```
+
+Dump entire key-value structure in FILE.
+By default, output formatted as S-expression.
+
+
+### Output formatting
+
+
 
 -----
 
