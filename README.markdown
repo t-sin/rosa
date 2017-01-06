@@ -160,17 +160,13 @@ By default, output formatted as S-expression.
 
 ### Output formatting
 
+Rosa can print pretty output several formats.
+To tell format, use options bellow:
 
-
------
-
-Basically, text data come from stdin, specify `name` you want.
-If the target text is in a text file, additionaly specify `file`.
-
-When you need entire structure of target text, specify `:all` to `name`.
-Then `rosa` returns a structure represented as S-expression.
-
-(I think, It's convinient that, if specified `:yml` to `name` then `rosa.ros` returns a structure as YAML... But not implemented, yet)
+- S-expression: `-s`
+    - Common Lisp plist and vector syntax
+- JSON: `-j`
+- YAML: `-y`
 
 
 ## installation
