@@ -1,16 +1,35 @@
-# Rosa - Simple markup language for named text parts
+# Rosa - text labeling language
 
 [![Build Status](https://travis-ci.org/t-sin/rosa.svg)](https://travis-ci.org/t-sin/rosa)
 
-Rosa is a simple markup language for named text parts.
+Rosa is a text labeling language.
 
 
 ## Basis
 
-Rosa's *named text* is a pair of strings, consists of **name** and **text**.
 
-**Name** is a name of **text**.
-**Text** is just one line string, or is multi line strings.
+Rosa is a language to attach meta data on text block.
+
+Text file written in rosa can be regarded as like a multi-value key-value data.
+
+Here, a pair in rosa data structure, it consist of just one **label** and multiple **bodies**.
+**Bodies** are ordered by appearance from head of text data.
+Because of it, array of **bodies** is simply called **body**
+
+**Label** is a meta data of **body**.
+It is a string represented as regex `[a-z][a-z0-9-]*`.
+
+**Body** is a value of **label**.
+It is a array of strings.
+Note that each strings in **body** can include newline.
+
+We can consider **Label** as *key* and **body** as *value*.
+
+
+## Syntax
+
+Rosa has an ASCII-based and minimal syntax.
+For details, see `SYNTAX.md`.
 
 A line starts with colon (`:`) denotes **name**.
 A line starts with semicolon (`;`) denotes **comment**.
