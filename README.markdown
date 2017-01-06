@@ -112,7 +112,7 @@ Rosa has a CLI front-end for parse rosa markup language.
 Here is sypnosis for `rosa`:
 
 ```
-$ rosa [OPTIONS] SUBCOMMAND [PARAMETERS]
+$ rosa SUBCOMMAND [OPTIONS] [PARAMETERS]
 ```
 
 
