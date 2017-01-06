@@ -66,6 +66,18 @@ Twice or more appearance of **label** is allowed, because of each **body** store
 
 ### Comments
 
+Comments can be used.
+It's start with `;`.
+
+An example bellow:
+
+```
+:text1
+
+This line is visible.
+; This line is invisible! Whoa!
+This line is read.
+```
 
 
 ### Escape sequences
