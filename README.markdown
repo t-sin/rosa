@@ -122,7 +122,7 @@ $ rosa [OPTIONS] SUBCOMMAND [PARAMETERS]
 ## Picking body up
 
 
-## Dumping structure
+## Dumping entire pairs
 
 -----
 
