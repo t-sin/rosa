@@ -9,12 +9,11 @@ Rosa is a text labeling language.
 
 
 Rosa is a language to attach meta data on text block.
-
 Text file written in rosa can be regarded as like a multi-value key-value data.
 
 Here, a pair in rosa data structure, it consist of just one **label** and multiple **bodies**.
 **Bodies** are ordered by appearance from head of text data.
-Because of it, array of **bodies** is simply called **body**
+Because of it, array of **bodies** is simply called **body**.
 
 **Label** is a meta data of **body**.
 It is a string represented as regex `[a-z][a-z0-9-]*`.
@@ -46,10 +45,8 @@ Otherwise, **label** called *block*.
 
 When the *label line* has space, it is regarded as *inline* label.
 **Label** and **body** separated with first appeared space (` `).
-
 If the line has no space, it is called **block**.
 **Label** and **body** separated with first appeared newline.
-
 For instance, see below how to write two kind of labels:
 
 ```
@@ -85,7 +82,6 @@ This line is read.
 To denotes colon and semicolon themselves at line head, use escape sequence.
 
 For colon, this is it: `::`.
-
 For semicolon, this is it: `:;`.
 
 An ecample bellow:
@@ -185,9 +181,9 @@ $ ros build rosa.ros
 ```
 
 
-## author
+## Author
 
-* shinichi tanaka (shinichi.tanaka45@gmail.com)
+- Shinichi Tanaka (shinichi.tanaka45@gmail.com)
 
 ## Copyright
 
