@@ -3,7 +3,7 @@
 #| Rosa command line front-end
 exec ros -Q -- $0 "$@"
 |#
-(defpackage :rosa.command
+(defpackage :rosa.cli
   (:use :cl))
 
 (ql:quickload '(:cl-yaml
@@ -12,7 +12,7 @@ exec ros -Q -- $0 "$@"
                 :rosa)
               :silent t)
 
-(in-package :rosa.command)
+(in-package :rosa.cli)
 
 
 (defun print-usage ()
