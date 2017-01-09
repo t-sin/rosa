@@ -65,10 +65,13 @@ PICKING UP OPTIONS
           specify number of bodies picking up from head.
           default, no supplied, NUM set as 1.
 
+      -t
+          tell rosa to pick up tail.
+
 "))
 
 (defstruct option
-  command format-type pick-label pick-all pick-nth pathname)
+  command format-type pick-label pick-all pick-nth pick-tail pathname)
 
 (defparameter +commands+
   '((:index "i" "index")
@@ -108,6 +111,9 @@ PICKING UP OPTIONS
                        ((and (eq command :pick)
                              (string= a "-a"))
                         (setf (option-pick-all option) t))
+                       ((and (eq command :pick)
+                             (string= a "-t"))
+                        (setf (option-pick-tail option) t))
                        ((and (eq command :pick)
                              (string= a "-n"))
                         (incf n)
@@ -167,6 +173,7 @@ PICKING UP OPTIONS
              (let ((pick-nth (option-pick-nth option)))
                (handler-case
                    (cond ((option-pick-all option) bodies)
+                         ((option-pick-tail option) (aref bodies (1- (length bodies))))
                          (pick-nth (aref bodies pick-nth))
                          (t (aref bodies 0)))
                  (condition (c)
