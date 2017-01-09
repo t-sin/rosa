@@ -22,51 +22,50 @@ usage: rosa index [OPTIONS] [FILE]
        rosa dump [OPTIONS] [FILE]
 
 DESCRIPTION
-    rosa extract key-value structure from input. key as 'label'
+    Rosa extract key-value structure from input. Key as 'label'
     and value as 'body'.
 
-    if not supplied `file`, rosa reads from standard input.
+    If not supplied `file`, rosa reads from standard input.
 
 COMMANDS
-    each commands have its shorthand; the first letter. for
+    Each commands have its shorthand; the first letter. For
     instance, shorthand of `index` is `i`.
 
     rosa index [FILE]
-        list all labels from input. by default, formatted as
+        List all labels from input. By default, formatted as
         line-based plain text.
 
     rosa pick LABEL [FILE]
-        pick up the value(s) corresponding to the label, from
-        input. by default, rosa returns only first body of
+        Pick up the value(s) corresponding to the label, from
+        input. By default, rosa returns only first body of
         all appearance.
 
     rosa dump [FILE]
-        parse and print entire key-value data from input.
+        Parse and print entire key-value data from input.
 
 FORMATTING OPTIONS
-    output formatting type. by default, output formatted as
+    Output formatting type. By default, output formatted as
     S-expression.
 
       -s
-          format output as S-expression.
+          Format output as S-expression.
       -j
-          format output as JSON.
+          Format output as JSON.
       -y
-          format output as YAML.
-
+          Format output as YAML.
 PICKING UP OPTIONS
-    available with pick command.
+    Available with pick command.
 
       -a
-          if supplied, all bodies are printed as formatting
+          If supplied, all bodies are printed as formatting
           type.
 
       -n NUM
-          specify number of bodies picking up from head.
+          Specify number of bodies picking up from head.
           default, no supplied, NUM set as 1.
 
       -t
-          tell rosa to pick up tail.
+          Tell rosa to pick up tail.
 
 "))
 
