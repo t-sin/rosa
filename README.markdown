@@ -4,6 +4,8 @@
 
 Rosa is a text labeling language.
 
+> Stat rosa pristina nomine, nomina nuda tenemus.
+
 
 ## Basis
 
