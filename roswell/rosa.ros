@@ -25,7 +25,7 @@ DESCRIPTION
     Rosa extract key-value structure from input. Key as 'label'
     and value as 'body'.
 
-    If not supplied `file`, rosa reads from standard input.
+    If not supplied FILE, rosa reads from standard input.
 
 COMMANDS
     Each commands have its shorthand; the first letter. For
