@@ -84,7 +84,7 @@ To denotes colon and semicolon themselves at line head, use escape sequence.
 For colon, this is it: `::`.
 For semicolon, this is it: `:;`.
 
-An ecample bellow:
+An example bellow:
 
 ```
 :text1
