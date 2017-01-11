@@ -6,7 +6,7 @@
         :prove))
 (in-package :rosa-semantics-test)
 
-(plan 7)
+(plan 8)
 
 
 (defun perusing-test (actual expected)
@@ -95,6 +95,15 @@
       (perusing-test (format nil ":label~%so long~%:label2~%and thanks for all the fish")
                      '(:|label| #("so long")
                        :|label2| #("and thanks for all the fish")))))
+
+(subtest "labels must be at line head. there are not labels"
+  (perusing-test " :label body" nil)
+  (perusing-test "examples: Arthur, Ford and Trillian" nil)
+  (perusing-test "examples:are bellow" nil)
+
+  (perusing-test (format nil " :label~%body") nil)
+  (perusing-test (format nil "examples:~%Arthur, Ford and Trillian") nil)
+  (perusing-test (format nil "examples:are~%bellow") nil))
 
 (subtest "comment"
   (subtest "comment starts with colon, and are ignored"
