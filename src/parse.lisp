@@ -65,7 +65,8 @@
            :do (write-char (funcall reader) out))))))
 
 (defun read-label (stream)
-  "returns (block-p label body rest)"
+  "Read label and returns (block-p label body rest).
+This function read chars **to newline always**."
   (with-reader stream
     (cond-escape-sequence
      peeker
@@ -91,8 +92,9 @@
                 (values nil nil nil rest))))))))
 
 (defun read-block (stream)
-  "returns (body label-p)"
   (run-until-chars nil c stream out :read
+  "Read block and returns (body label-p).
+This function read chars **to newline always**."
     (labels ((read-to-eol ()
                (run-until-chars (#\newline) ch2 stream nil :peek
                  (write-char (funcall reader) out)))
