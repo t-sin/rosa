@@ -99,7 +99,6 @@ This function read chars **include newline**."
       (labels ((read-to-eol ()
                  (run-until-chars (#\newline) ch2 stream nil :peek
                    (write-char (funcall reader) out))))
-        (format t "~s ~s~%" c linehead-p)
         (cond ((char= c #\newline)
                (progn
                  (let ((peek (funcall peeker)))
@@ -153,7 +152,6 @@ This function read chars **include newline**."
                                 (progn
                                   (setf linehead-p t)
                                   (push-body data label body)))))))
-                                        ;               (format t "~s ~s~%" c linehead-p)
                (cond ((char= c #\newline) (setf linehead-p t))
                      ((and linehead-p (char= c #\:))
                       (progn
