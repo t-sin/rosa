@@ -98,25 +98,30 @@ This function read chars **include newline**."
     (run-until-chars nil c stream out :read
       (labels ((read-to-eol ()
                  (run-until-chars (#\newline) ch2 stream nil :peek
-                   (write-char (funcall reader) out)))
-               (return-when-label-found ()
-                 (return-from read-block
-                   (values (get-output-stream-string out) t))))
+                   (write-char (funcall reader) out))))
+        (format t "~s ~s~%" c linehead-p)
         (cond ((char= c #\newline)
                (progn
-                 (setf linehead-p t)
-                 (write-char c out)))
+                 (let ((peek (funcall peeker)))
+                   (when (or (eq peek :eof) (char/= peek #\:))
+                     (write-char #\newline out)))
+                 (setf linehead-p t)))
               ((and linehead-p (char= c #\:))
-               (cond-escape-sequence peeker
-                                     (return-from run-until-chars)
-                                     (read-to-eol)
-                                     (return-from read-block
-                                       (values nil t))))
-              ((char= c #\;) (run-until-chars (#\newline) ch1 stream nil :read))
+               (progn
+                 (cond-escape-sequence peeker
+                                       (return-from run-until-chars)
+                                       (read-to-eol)
+                                       (return-from read-block
+                                         (values (get-output-stream-string out) t)))
+                 (setf linehead-p nil)))
+              ((char= c #\;)
+               (progn
+                 (run-until-chars (#\newline) ch1 stream nil :read)
+                 (setf linehead-p nil)))
               (t (progn
+                   (setf linehead-p nil)
                    (write-char c out)
-                   (read-to-eol))))
-        (setf linehead-p nil)))))
+                   (read-to-eol))))))))
 
 (defun push-body (hash label body)
   (let ((key (intern label :keyword)))
