@@ -88,14 +88,53 @@
     (perusing-test (format nil ":label~%so long~%and thanks for all the fish")
                    `(:|label| #(,(format nil "so long~%and thanks for all the fish")))))
 
-  (subtest "special cases with labels"
-      (perusing-test (format nil ":label~%so long~%:label2 and thanks for all the fish")
-                     '(:|label| #("so long")
-                       :|label2| #("and thanks for all the fish")))
-      (perusing-test (format nil ":label~%so long~%:label2~%and thanks for all the fish")
-                     '(:|label| #("so long")
-                       :|label2| #("and thanks for all the fish")))))
+  (subtest "when newline is placed at front of EOF, body ends at previous char of *the newline*"
+    (perusing-test (format nil ":label~%so long~%")
+                   '(:|label| #("so long"))))
 
+  (subtest "when newline is not placed at front of EOF, body ends at previous char of *EOF*"
+    (perusing-test (format nil ":label~%so long")
+                   '(:|label| #("so long"))))
+
+  (subtest "when newline is placed at front of label, body ends at previous char of *the newline*"
+    (perusing-test (format nil ":label~%so long~%:label2 and thanks for all the fish")
+                   '(:|label| #("so long")
+                     :|label2| #("and thanks for all the fish"))))
+
+  (subtest "when block has no body lines, body is empty string"
+    (perusing-test (format nil ":label~%~%")
+                   '(:|label| #("")))
+    (perusing-test (format nil ":label~%~%:label2 text")
+                   '(:|label| #("") :|label2| #("text"))))
+
+  (subtest "line number"
+    (subtest "two"
+      (perusing-test (format nil ":label~%one~%two")
+                     `(:|label| #(,(format nil "one~%two"))))
+      (perusing-test (format nil ":label~%one~%two~%")
+                     `(:|label| #(,(format nil "one~%two"))))
+      (perusing-test (format nil ":label~%one~%two~%:label2 text")
+                     `(:|label| #(,(format nil "one~%two")) :|label2| #("text")))
+
+      (perusing-test (format nil ":label~%~%~%")
+                     `(:|label| #(,(format nil "~%"))))
+      (perusing-test (format nil ":label~%~%~%:label2 text")
+                     `(:|label| #(,(format nil "~%")) :|label2| #("text"))))
+
+    (subtest "three"
+      (perusing-test (format nil ":label~%one~%two~%three")
+                     `(:|label| #(,(format nil "one~%two~%three"))))
+      (perusing-test (format nil ":label~%one~%two~%three~%")
+                     `(:|label| #(,(format nil "one~%two~%three"))))
+      (perusing-test (format nil ":label~%one~%two~%three~%:label2 text")
+                     `(:|label| #(,(format nil "one~%two~%three")) :|label2| #("text")))
+
+      (perusing-test (format nil ":label~%~%~%~%")
+                     `(:|label| #(,(format nil "~%~%"))))
+      (perusing-test (format nil ":label~%~%~%~%:label2 text")
+                     `(:|label| #(,(format nil "~%~%")) :|label2| #("text"))))))
+
+(diag "!!!!!TODO: fix tests bellow !!!!!!!")
 (subtest "labels must be at line head. there are not labels"
   (perusing-test " :label body" nil)
   (perusing-test "examples: Arthur, Ford and Trillian" nil)
