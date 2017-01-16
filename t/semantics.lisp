@@ -148,27 +148,46 @@
   (perusing-test (format nil ":block~%body~% :ignore~%ignored")
                  `(:|block| #(,(format nil "body~% :ignore~%ignored")))))
 
-(diag "!!!!!TODO: fix tests bellow !!!!!!!")
 (subtest "comment"
-  (subtest "comment starts with colon, and are ignored"
-    (perusing-test ";comment" nil)
-    (perusing-test "; comment" nil))
+  (subtest "comment starts with colon in block body, are ignored"
+    (perusing-test (format nil ":block~%;NGAHHHHHH")
+                   `(:|block| #(,(format nil ""))))
 
-  (subtest "comments in block body are ignored"
-    (perusing-test (format nil ":block~%oh,~%;comment~%deep thought.")
+    (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep thought.")
                    `(:|block| #(,(format nil "oh,~%deep thought."))))
-    (perusing-test (format nil ":block~%oh,~%;comment1~%;comment2~%deep thought.")
+    (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%;NGAHHHHHH~%deep thought.")
                    `(:|block| #(,(format nil "oh,~%deep thought."))))
-    (perusing-test (format nil ":block~%oh,~%;comment1~%deep~%;comment2~%thought.")
-                   `(:|block| #(,(format nil "oh,~%deep~%thought."))))
-           
-    (subtest "when block ends with comment, block body includes eol..."
-             (perusing-test (format nil ":block~%oh,~%;comment1~%deep thought.~%;comment2")
-                            `(:|block| #(,(format nil "oh,~%deep thought.~%")))))
+    (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep~%;NGAHHHHHH~%thought.")
+                   `(:|block| #(,(format nil "oh,~%deep~%thought.")))))
 
-    (perusing-test (format nil ":block~%oh,~%~%;comment1~%~%deep thought.")
-                   `(:|block| #(,(format nil "oh,~%~%~%deep thought."))))))
+  (subtest "comment starts at line-head"
+      (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep thought.")
+                     `(:|block| #(,(format nil "oh,~%deep thought."))))
+      (perusing-test (format nil ":block~%oh,~% ;NGAHHHHHH~%deep thought.")
+                     `(:|block| #(,(format nil "oh,~% ;NGAHHHHHH~%deep thought.")))))
 
+  (subtest "comment line consists of a couple; string and newline"
+    (perusing-test (format nil ":block~%oh,~%~%;NGAHHHHHH~%~%deep thought.")
+                     `(:|block| #(,(format nil "oh,~%~%~%deep thought."))))
+
+    (subtest "comment line is regarded as empty string"
+      (perusing-test (format nil ":block~%;NGAHHHHHH~%;NGAHHHHHH~%:label body")
+                     `(:|block| #(,(format nil ""))
+                       :|label| #("body")))
+
+      (perusing-test (format nil ":block~%;NGAHHHHHH~%;NGAHHHHHH")
+                     `(:|block| #(,(format nil ""))))
+      (perusing-test (format nil ":block~%;NGAHHHHHH~%;NGAHHHHHH~%")
+                     `(:|block| #(,(format nil ""))))))
+
+  (subtest "when block ends with comment, block body does not include eol"
+    (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep thought.~%;NGAHHHHHH")
+                   `(:|block| #(,(format nil "oh,~%deep thought.~%"))))
+    (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep thought.~%;NGAHHHHHH~%:label body")
+                   `(:|block| #(,(format nil "oh,~%deep thought.~%"))
+                     :|label| #("body")))))
+
+(diag "!!!!!TODO: fix tests bellow !!!!!!!")
 (subtest "escape sequences"
   (subtest "colon escaping"
     (subtest "escaping is a plain line"
