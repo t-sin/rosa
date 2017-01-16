@@ -151,23 +151,23 @@
 (diag "!!!!!TODO: fix tests bellow !!!!!!!")
 (subtest "comment"
   (subtest "comment starts with colon, and are ignored"
-           (perusing-test ";comment" nil)
-           (perusing-test "; comment" nil))
+    (perusing-test ";comment" nil)
+    (perusing-test "; comment" nil))
 
   (subtest "comments in block body are ignored"
-           (perusing-test (format nil ":block~%oh,~%;comment~%deep thought.")
-                          `(:|block| #(,(format nil "oh,~%deep thought."))))
-           (perusing-test (format nil ":block~%oh,~%;comment1~%;comment2~%deep thought.")
-                          `(:|block| #(,(format nil "oh,~%deep thought."))))
-           (perusing-test (format nil ":block~%oh,~%;comment1~%deep~%;comment2~%thought.")
-                          `(:|block| #(,(format nil "oh,~%deep~%thought."))))
+    (perusing-test (format nil ":block~%oh,~%;comment~%deep thought.")
+                   `(:|block| #(,(format nil "oh,~%deep thought."))))
+    (perusing-test (format nil ":block~%oh,~%;comment1~%;comment2~%deep thought.")
+                   `(:|block| #(,(format nil "oh,~%deep thought."))))
+    (perusing-test (format nil ":block~%oh,~%;comment1~%deep~%;comment2~%thought.")
+                   `(:|block| #(,(format nil "oh,~%deep~%thought."))))
            
-           (subtest "when block ends with comment, block body includes eol..."
-                    (perusing-test (format nil ":block~%oh,~%;comment1~%deep thought.~%;comment2")
-                                   `(:|block| #(,(format nil "oh,~%deep thought.~%")))))
+    (subtest "when block ends with comment, block body includes eol..."
+             (perusing-test (format nil ":block~%oh,~%;comment1~%deep thought.~%;comment2")
+                            `(:|block| #(,(format nil "oh,~%deep thought.~%")))))
 
-           (perusing-test (format nil ":block~%oh,~%~%;comment1~%~%deep thought.")
-                          `(:|block| #(,(format nil "oh,~%~%~%deep thought."))))))
+    (perusing-test (format nil ":block~%oh,~%~%;comment1~%~%deep thought.")
+                   `(:|block| #(,(format nil "oh,~%~%~%deep thought."))))))
 
 (subtest "escape sequences"
   (subtest "colon escaping"
