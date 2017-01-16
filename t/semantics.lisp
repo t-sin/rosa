@@ -134,7 +134,6 @@
       (perusing-test (format nil ":label~%~%~%~%:label2 text")
                      `(:|label| #(,(format nil "~%~%")) :|label2| #("text"))))))
 
-(diag "!!!!!TODO: fix tests bellow !!!!!!!")
 (subtest "labels must be at line head. there are not labels"
   (perusing-test " :label body" nil)
   (perusing-test "examples: Arthur, Ford and Trillian" nil)
@@ -142,8 +141,14 @@
 
   (perusing-test (format nil " :label~%body") nil)
   (perusing-test (format nil "examples:~%Arthur, Ford and Trillian") nil)
-  (perusing-test (format nil "examples:are~%bellow") nil))
+  (perusing-test (format nil "examples:are~%bellow") nil)
 
+  (perusing-test (format nil ":block~%body~% :ignore ignored")
+                 `(:|block| #(,(format nil "body~% :ignore ignored"))))
+  (perusing-test (format nil ":block~%body~% :ignore~%ignored")
+                 `(:|block| #(,(format nil "body~% :ignore~%ignored")))))
+
+(diag "!!!!!TODO: fix tests bellow !!!!!!!")
 (subtest "comment"
   (subtest "comment starts with colon, and are ignored"
            (perusing-test ";comment" nil)
