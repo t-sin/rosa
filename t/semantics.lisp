@@ -225,14 +225,21 @@
   (perusing-test (format nil "foo~%:label text~%bar") '(:|label| #("text")))
   (perusing-test (format nil "foo~%:label~%text~%bar") '(:|label| #("text"))))
 
-(diag "!!!!!TODO: fix tests bellow !!!!!!!")
-(subtest "last eols"
+(subtest "when block ends with newline, eol removes newline at tail"
   (perusing-test (format nil ":block~%line1")
                  `(:|block| #(,(format nil "line1"))))
   (perusing-test (format nil ":block~%line1~%")
-                 `(:|block| #(,(format nil "line1~%"))))
+                 `(:|block| #(,(format nil "line1"))))
+
+  (perusing-test (format nil ":block~%line1~%line2")
+                 `(:|block| #(,(format nil "line1~%line2"))))
+  (perusing-test (format nil ":block~%line1~%line2~%")
+                 `(:|block| #(,(format nil "line1~%line2"))))
+
+  (perusing-test (format nil ":block~%line1~%")
+                 `(:|block| #(,(format nil "line1"))))
   (perusing-test (format nil ":block~%line1~%~%")
-                 `(:|block| #(,(format nil "line1~%~%")))))
+                 `(:|block| #(,(format nil "line1~%")))))
 
 
 (finalize)
