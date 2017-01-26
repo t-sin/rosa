@@ -94,17 +94,14 @@ This function read chars **include newline**."
 (defun read-block (stream)
   "Read block and returns (body label-p).
 This function read chars **include newline**."
-  (let ((linehead-p t))
+  (let ((linehead-p nil))
     (run-until-chars nil c stream out :read
       (labels ((read-to-eol ()
                  (run-until-chars (#\newline) ch2 stream nil :peek
                    (write-char (funcall reader) out))))
-        (cond ((char= c #\newline)
-               (progn
-                 (let ((peek (funcall peeker)))
-                   (when (or (eq peek :eof) (char/= peek #\:))
-                     (write-char #\newline out)))
-                 (setf linehead-p t)))
+        (when linehead-p
+          (write-char #\newline out))
+        (cond ((char= c #\newline) (setf linehead-p t))
               ((and linehead-p (char= c #\:))
                (progn
                  (cond-escape-sequence peeker
