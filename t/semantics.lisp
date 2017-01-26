@@ -168,7 +168,7 @@
 
   (subtest "comment line consists of a couple; string and newline"
     (perusing-test (format nil ":block~%oh,~%~%;NGAHHHHHH~%~%deep thought.")
-                     `(:|block| #(,(format nil "oh,~%~%~%deep thought."))))
+                   `(:|block| #(,(format nil "oh,~%~%~%deep thought."))))
 
     (subtest "comment line is regarded as empty string"
       (perusing-test (format nil ":block~%;NGAHHHHHH~%;NGAHHHHHH~%:label body")
