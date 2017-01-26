@@ -99,10 +99,12 @@ This function read chars **include newline**."
       (labels ((read-to-eol ()
                  (run-until-chars (#\newline) ch2 stream nil :peek
                    (write-char (funcall reader) out))))
-        (when linehead-p
-          (write-char #\newline out))
-        (cond ((char= c #\newline) (setf linehead-p t))
-              ((and linehead-p (char= c #\:))
+        (cond ((char= c #\newline)
+               (let ((peek (funcall peeker)))
+                 (when (and (characterp peek)
+                            (char/= #\: peek))
+                   (write-char #\newline out))))
+              ((char= c #\:)
                (progn
                  (cond-escape-sequence peeker
                                        (return-from run-until-chars)
@@ -112,10 +114,8 @@ This function read chars **include newline**."
                  (setf linehead-p nil)))
               ((char= c #\;)
                (progn
-                 (run-until-chars (#\newline) ch1 stream nil :read)
-                 (setf linehead-p nil)))
+                 (run-until-chars (#\newline) ch1 stream nil :read)))
               (t (progn
-                   (setf linehead-p nil)
                    (write-char c out)
                    (read-to-eol))))))))
 
