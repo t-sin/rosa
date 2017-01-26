@@ -212,7 +212,7 @@
 
     (perusing-test (format nil ":block~%:;; is semicolon semicolon")
                    `(:|block| #(,(format nil ";; is semicolon semicolon"))))
-    (perusing-test (format nil ":block~% :;; is colon semicolon")
+    (perusing-test (format nil ":block~% :; is colon semicolon")
                    `(:|block| #(,(format nil " :; is colon semicolon"))))))
 
 (subtest "plain line not in block are ignored"
