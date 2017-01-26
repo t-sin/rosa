@@ -217,13 +217,15 @@
 
 (subtest "plain line not in block are ignored"
   (perusing-test (format nil ":label text~%foo") '(:|label| #("text")))
-  (perusing-test (format nil ":label~%text~%foo") '(:|label| #("text")))
+  (perusing-test (format nil ":label~%text~%foo")
+                 `(:|label| #(,(format nil "text~%foo"))))
 
   (perusing-test (format nil "foo~%:label text") '(:|label| #("text")))
   (perusing-test (format nil "foo~%:label~%text") '(:|label| #("text")))
 
   (perusing-test (format nil "foo~%:label text~%bar") '(:|label| #("text")))
-  (perusing-test (format nil "foo~%:label~%text~%bar") '(:|label| #("text"))))
+  (perusing-test (format nil "foo~%:label~%text~%bar")
+                 `(:|label| #(,(format nil "text~%bar")))))
 
 (subtest "when block ends with newline, eol removes newline at tail"
   (perusing-test (format nil ":block~%line1")
