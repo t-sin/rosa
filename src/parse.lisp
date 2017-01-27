@@ -16,9 +16,9 @@
                      #'(lambda () (stream-peek-char ,instream))
                      #'(lambda () (peek-char nil ,instream nil :eof))))
          (unreader (if (subtypep (type-of ,instream)
-                               'fundamental-character-input-stream)
-                     #'(lambda (c) (stream-unread-char ,instream c))
-                     #'(lambda (c) (unread-char c ,instream)))))
+                                 'fundamental-character-input-stream)
+                       #'(lambda (c) (stream-unread-char ,instream c))
+                       #'(lambda (c) (unread-char c ,instream)))))
      (declare (ignorable reader peeker unreader))
      ,@body))
 
@@ -65,7 +65,8 @@
            :do (write-char (funcall reader) out))))))
 
 (defun read-label (stream)
-  "returns (block-p label body rest)"
+  "Read label and returns (block-p label body rest).
+This function read chars **include newline**."
   (with-reader stream
     (cond-escape-sequence
      peeker
@@ -91,29 +92,27 @@
                 (values nil nil nil rest))))))))
 
 (defun read-block (stream)
-  "returns (body label-p)"
+  "Read block and returns (body label-p).
+This function read chars **include newline**."
+
   (run-until-chars nil c stream out :read
     (labels ((read-to-eol ()
                (run-until-chars (#\newline) ch2 stream nil :peek
-                 (write-char (funcall reader) out)))
-             (return-when-label-found ()
-               (return-from read-block
-                 (values (get-output-stream-string out) t)))
-             (when-eol ()
-               (multiple-value-bind (body label-p)
-                   (read-block stream)
-                 (when body
-                   (format out "~%~a" body))
-                 (when label-p
-                   (return-when-label-found)))))
-      (cond ((eq c :eof) (return-from run-until-chars))
-            ((char= c #\newline) (when-eol))
-            ((char= c #\:) (cond-escape-sequence peeker
-                                                 (return-from run-until-chars)
-                                                 (read-to-eol)
-                                                 (return-from read-block
-                                                   (values nil t))))
-            ((char= c #\;) (run-until-chars (#\newline) ch1 stream nil :read))
+                 (write-char (funcall reader) out))))
+      (cond ((char= c #\newline)
+             (let ((peek (funcall peeker)))
+               (when (and (characterp peek)
+                          (char/= #\: peek))
+                 (write-char #\newline out))))
+            ((char= c #\:)
+             (cond-escape-sequence peeker
+                                   (return-from run-until-chars)
+                                   (read-to-eol)
+                                   (return-from read-block
+                                     (values (get-output-stream-string out) t))))
+            ((char= c #\;)
+             (progn
+               (run-until-chars (#\newline) ch1 stream nil :read)))
             (t (progn
                  (write-char c out)
                  (read-to-eol)))))))
@@ -129,20 +128,29 @@
   "read key-value data."
   (with-reader stream
     (let ((data (make-hash-table)))
-      (labels ((read-colon ()
-                 (multiple-value-bind (block-p label body rest)
-                     (read-label stream)
-                   (unless rest
-                     (if block-p
-                         (multiple-value-bind (body label-p)
-                             (read-block stream)
-                           (push-body data label body)
-                           (when label-p
-                             (read-colon)))
-                         (push-body data label body))))))
-        (loop
-           :for c := (funcall reader)
-           :until (eq c :eof)
-           :finally (return-from peruse data)
-           :when (char= c #\:)
-           :do (read-colon))))))
+      (loop
+         :for c := (funcall reader)
+         :with linehead-p := t
+         :until (eq c :eof)
+         :finally (return-from peruse data)
+         :do (labels ((read-colon ()
+                        (multiple-value-bind (block-p label body rest)
+                            (read-label stream)
+                          (unless rest
+                            (if block-p
+                                (multiple-value-bind (body label-p)
+                                    (read-block stream)
+                                  (setf linehead-p t)
+                                  (push-body data label body)
+                                  (when label-p
+                                    (read-colon)))
+                                (progn
+                                  (setf linehead-p t)
+                                  (push-body data label body)))))))
+               (cond ((char= c #\newline) (setf linehead-p t))
+                     ((and linehead-p (char= c #\:))
+                      (progn
+                        (setf linehead-p nil)
+                        (read-colon)))
+                     (t (setf linehead-p nil))))))))
+
