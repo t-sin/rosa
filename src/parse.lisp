@@ -10,7 +10,6 @@
   `(let ((reader (if (subtypep (type-of ,instream)
                                'fundamental-character-input-stream)
                      #'(lambda () (stream-read-char ,instream))
-
                      #'(lambda () (read-char ,instream nil :eof))))
          (peeker (if (subtypep (type-of ,instream)
                                'fundamental-character-input-stream)
