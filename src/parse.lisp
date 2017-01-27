@@ -94,30 +94,28 @@ This function read chars **include newline**."
 (defun read-block (stream)
   "Read block and returns (body label-p).
 This function read chars **include newline**."
-  (let ((linehead-p nil))
-    (run-until-chars nil c stream out :read
-      (labels ((read-to-eol ()
-                 (run-until-chars (#\newline) ch2 stream nil :peek
-                   (write-char (funcall reader) out))))
-        (cond ((char= c #\newline)
-               (let ((peek (funcall peeker)))
-                 (when (and (characterp peek)
-                            (char/= #\: peek))
-                   (write-char #\newline out))))
-              ((char= c #\:)
-               (progn
-                 (cond-escape-sequence peeker
-                                       (return-from run-until-chars)
-                                       (read-to-eol)
-                                       (return-from read-block
-                                         (values (get-output-stream-string out) t)))
-                 (setf linehead-p nil)))
-              ((char= c #\;)
-               (progn
-                 (run-until-chars (#\newline) ch1 stream nil :read)))
-              (t (progn
-                   (write-char c out)
-                   (read-to-eol))))))))
+
+  (run-until-chars nil c stream out :read
+    (labels ((read-to-eol ()
+               (run-until-chars (#\newline) ch2 stream nil :peek
+                 (write-char (funcall reader) out))))
+      (cond ((char= c #\newline)
+             (let ((peek (funcall peeker)))
+               (when (and (characterp peek)
+                          (char/= #\: peek))
+                 (write-char #\newline out))))
+            ((char= c #\:)
+             (cond-escape-sequence peeker
+                                   (return-from run-until-chars)
+                                   (read-to-eol)
+                                   (return-from read-block
+                                     (values (get-output-stream-string out) t))))
+            ((char= c #\;)
+             (progn
+               (run-until-chars (#\newline) ch1 stream nil :read)))
+            (t (progn
+                 (write-char c out)
+                 (read-to-eol)))))))
 
 (defun push-body (hash label body)
   (let ((key (intern label :keyword)))
