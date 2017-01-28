@@ -213,7 +213,13 @@
     (perusing-test (format nil ":block~%:;; is semicolon semicolon")
                    `(:|block| #(,(format nil ";; is semicolon semicolon"))))
     (perusing-test (format nil ":block~% :; is colon semicolon")
-                   `(:|block| #(,(format nil " :; is colon semicolon"))))))
+                   `(:|block| #(,(format nil " :; is colon semicolon")))))
+
+  (subtest "escape sequences in a row (issue #12)"
+    (perusing-test (format nil ":block~%:; is semicolon~%:: is colon~%")
+                   `(:|block| #(,(format nil "; is semicolon~%: is colon~%"))))
+    (perusing-test (format nil ":block~%:; is semicolon~%:: is colon~%::: is colon colon")
+                   `(:|block| #(,(format nil "; is semicolon~%: is colon~%:: is colon colon"))))))
 
 (subtest "plain line not in block are ignored"
   (perusing-test (format nil ":label text~%foo") '(:|label| #("text")))
