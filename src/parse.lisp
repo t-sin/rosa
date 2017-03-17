@@ -2,6 +2,8 @@
 (defpackage rosa.parse
   (:use :cl
         :trivial-gray-streams)
+  (:import-from :anaphora
+                :aif)
   (:export :peruse))
 (in-package :rosa.parse)
 
@@ -154,39 +156,40 @@ This function read chars **include newline**."
                      (t (setf linehead-p nil))))))))
 
 
+(defun escaped-line-p (line)
+  (and (> (length line) 2)
+       (or (char= (char line 1) #\:)
+           (char= (char line 1) #\;))))
+
 (defun peruse2 (stream)
-  (let ((data)
-        (label)
-        (label-body))
-    (flet ((colon-line (s)
-             (if (and (> (length s) 2)
-                      (or (char= (char s 1) #\:)
-                          (char= (char s 1) #\;)))
-                 (format t "escape: ~s~%" (subseq s 1))
-                 (anaphora:aif (position #\space s)
-                               (let ((key (intern (subseq s 1 anaphora:it) :keyword)))
-                                 (setf label nil)
-                                 (setf label-body (make-string-output-stream))
-                                 (setf (getf data key) (subseq s (1+ anaphora:it))))
-                               (progn
-                                 (when label
-                                   (setf (getf data label) (get-output-stream-string label-body)))
-                                 (setf label (intern (subseq s 1) :keyword))))))
-           (semicolon-line (s) (format t "DO NOTHING: ~s~%" s))
-           (otherwise-line (s)
-             (format label-body "~a~%" s)))
-      (with-input-from-string (in *test-string*)
-        (loop :named hoge
-           :for line := (read-line in nil :eof)
-           :do (format t "label: ~s~%;  ~s~%   " label label-body)
-           :do (cond ((eq line :eof) (progn
-                                       (when label
-                                         (setf (getf data label) (get-output-stream-string label-body)))
-                                       (return-from hoge data)))
-                     ((and (> (length line) 0)
-                           (char= (char line 0) #\:))
-                      (colon-line line))
-                     ((and (> (length line) 0)
-                           (char= (char line 0) #\;))
-                      (semicolon-line line))
-                     (t (otherwise-line line))))))))
+  (let ((data) block-label block-text)
+    (labels ((update-state-as-inline (label text)
+               (setf block-label nil
+                     block-text (make-string-output-stream)
+                     (getf data label) text))
+             (update-state-as-block (label)
+               (when block-label
+                 (setf (getf data block-label) (get-output-stream-string block-text)))
+               (setf block-label label))
+             (append-line-to-block (line)
+               (when block-label
+                 (format block-text "~a~%" line)))
+             (colon-line (s)
+               (if (escaped-line-p s)
+                   (append-line-to-block (subseq s 1))
+                   (aif (position #\space s)
+                        (update-state-as-inline (intern (subseq s 1 anaphora:it) :keyword)
+                                                (subseq s (1+ anaphora:it)))
+                        (update-state-as-block (intern (subseq s 1) :keyword)))))
+             (otherwise-line (s) (append-line-to-block s)))
+      (loop :named hoge
+         :for line := (read-line stream nil :eof)
+         :do (cond ((eq line :eof) (progn
+                                     (update-state-as-block block-label)
+                                     (return-from hoge data)))
+                   ((and (> (length line) 0)
+                         (char= (char line 0) #\:))
+                    (colon-line line))
+                   ((and (> (length line) 0)
+                         (char= (char line 0) #\;)) 'do-nothing)
+                   (t (otherwise-line line)))))))
