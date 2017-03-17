@@ -162,16 +162,16 @@ This function read chars **include newline**."
            (char= (char line 1) #\;))))
 
 (defun peruse2 (stream)
-  (let ((data (make-hash-table))
+  (let ((rosa-data (make-hash-table))
         (block-label)
         (block-text))
     (labels ((update-state-as-inline (label text)
                (setf block-label nil
                      block-text (make-string-output-stream))
-               (push-body data label text))
+               (push-body rosa-data label text))
              (update-state-as-block (label)
                (when block-label
-                 (push-body data block-label (get-output-stream-string block-text)))
+                 (push-body rosa-data block-label (get-output-stream-string block-text)))
                (setf block-label label))
              (append-line-to-block (line)
                (when block-label
@@ -188,7 +188,7 @@ This function read chars **include newline**."
          :for line := (read-line stream nil :eof)
          :do (cond ((eq line :eof) (progn
                                      (update-state-as-block block-label)
-                                     (return-from parse data)))
+                                     (return-from parse rosa-data)))
                    ((and (> (length line) 0)
                          (char= (char line 0) #\:))
                     (colon-line line))
