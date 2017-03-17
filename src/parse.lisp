@@ -129,8 +129,7 @@ This function read chars **include newline**."
   (with-reader stream
     (let ((data (make-hash-table)))
       (loop
-         :for c := (funcall reader)
-         :with linehead-p := t
+         :for line := (funcall linereader)
          :until (eq c :eof)
          :finally (return-from peruse data)
          :do (labels ((read-colon ()
@@ -154,3 +153,40 @@ This function read chars **include newline**."
                         (read-colon)))
                      (t (setf linehead-p nil))))))))
 
+
+(defun peruse2 (stream)
+  (let ((data)
+        (label)
+        (label-body))
+    (flet ((colon-line (s)
+             (if (and (> (length s) 2)
+                      (or (char= (char s 1) #\:)
+                          (char= (char s 1) #\;)))
+                 (format t "escape: ~s~%" (subseq s 1))
+                 (anaphora:aif (position #\space s)
+                               (let ((key (intern (subseq s 1 anaphora:it) :keyword)))
+                                 (setf label nil)
+                                 (setf label-body (make-string-output-stream))
+                                 (setf (getf data key) (subseq s (1+ anaphora:it))))
+                               (progn
+                                 (when label
+                                   (setf (getf data label) (get-output-stream-string label-body)))
+                                 (setf label (intern (subseq s 1) :keyword))))))
+           (semicolon-line (s) (format t "DO NOTHING: ~s~%" s))
+           (otherwise-line (s)
+             (format label-body "~a~%" s)))
+      (with-input-from-string (in *test-string*)
+        (loop :named hoge
+           :for line := (read-line in nil :eof)
+           :do (format t "label: ~s~%;  ~s~%   " label label-body)
+           :do (cond ((eq line :eof) (progn
+                                       (when label
+                                         (setf (getf data label) (get-output-stream-string label-body)))
+                                       (return-from hoge data)))
+                     ((and (> (length line) 0)
+                           (char= (char line 0) #\:))
+                      (colon-line line))
+                     ((and (> (length line) 0)
+                           (char= (char line 0) #\;))
+                      (semicolon-line line))
+                     (t (otherwise-line line))))))))
