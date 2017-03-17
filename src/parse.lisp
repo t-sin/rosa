@@ -18,6 +18,28 @@
      (declare (ignorable reader peeker unreader))
      ,@body))
 
+(defun label-p (text)
+  "label identifier is defined by regex \"[a-z][a-z0-9-]*\""
+  ;; but this impl depends on ASCII-like char-code...
+  (labels ((identifier-first-char-p (ch)
+             (let ((ch-code (char-code ch)))
+               (and (<= (char-code #\a) ch-code)
+                    (>= (char-code #\z) ch-code))))
+           (identifier-char-p (ch)
+             (let ((ch-code (char-code ch)))
+               (or (identifier-first-char-p ch)
+                   (and (<= (char-code #\0) ch-code)
+                        (>= (char-code #\9) ch-code))
+                   (char= ch #\-)))))
+    (loop
+       :for ch :across text
+       :with first-p := t
+       :always (if first-p
+                   (progn
+                     (setf first-p nil)
+                     (identifier-first-char-p ch))
+                   (identifier-char-p ch)))))
+
 (defun escaped-line-p (line)
   (and (> (length line) 2)
        (or (char= (char line 1) #\:)
@@ -50,8 +72,11 @@
                (if (escaped-line-p s)
                    (append-line-to-block (subseq s 1))
                    (aif (position #\space s)
-                        (update-state-as-inline (subseq s 1 anaphora:it)
-                                                (subseq s (1+ anaphora:it)))
+                        (let ((label (subseq s 1 anaphora:it))
+                              (text (subseq s (1+ anaphora:it))))
+                          (if (label-p label)
+                              (update-state-as-inline label text)
+                              (append-line-to-block (format nil "~a ~a" label text))))
                         (update-state-as-block (subseq s 1)))))
              (otherwise-line (s) (append-line-to-block s)))
       (with-linereader (stream)
