@@ -184,11 +184,11 @@ This function read chars **include newline**."
                                                 (subseq s (1+ anaphora:it)))
                         (update-state-as-block (subseq s 1)))))
              (otherwise-line (s) (append-line-to-block s)))
-      (loop :named hoge
+      (loop :named parse
          :for line := (read-line stream nil :eof)
          :do (cond ((eq line :eof) (progn
                                      (update-state-as-block block-label)
-                                     (return-from hoge data)))
+                                     (return-from parse data)))
                    ((and (> (length line) 0)
                          (char= (char line 0) #\:))
                     (colon-line line))
