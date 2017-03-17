@@ -162,14 +162,16 @@ This function read chars **include newline**."
            (char= (char line 1) #\;))))
 
 (defun peruse2 (stream)
-  (let ((data) block-label block-text)
+  (let ((data (make-hash-table))
+        (block-label)
+        (block-text))
     (labels ((update-state-as-inline (label text)
                (setf block-label nil
-                     block-text (make-string-output-stream)
-                     (getf data label) text))
+                     block-text (make-string-output-stream))
+               (push-body data label text))
              (update-state-as-block (label)
                (when block-label
-                 (setf (getf data block-label) (get-output-stream-string block-text)))
+                 (push-body data block-label (get-output-stream-string block-text)))
                (setf block-label label))
              (append-line-to-block (line)
                (when block-label
@@ -178,9 +180,9 @@ This function read chars **include newline**."
                (if (escaped-line-p s)
                    (append-line-to-block (subseq s 1))
                    (aif (position #\space s)
-                        (update-state-as-inline (intern (subseq s 1 anaphora:it) :keyword)
+                        (update-state-as-inline (subseq s 1 anaphora:it)
                                                 (subseq s (1+ anaphora:it)))
-                        (update-state-as-block (intern (subseq s 1) :keyword)))))
+                        (update-state-as-block (subseq s 1)))))
              (otherwise-line (s) (append-line-to-block s)))
       (loop :named hoge
          :for line := (read-line stream nil :eof)
