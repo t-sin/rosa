@@ -58,13 +58,13 @@
         (block-label)
         (block-text))
     (labels ((update-state-as-inline (label text)
-               (setf block-label nil
-                     block-text (make-string-output-stream))
+               (setf block-label nil)
                (push-body rosa-data label text))
              (update-state-as-block (label)
                (when block-label
                  (push-body rosa-data block-label (get-output-stream-string block-text)))
-               (setf block-label label))
+               (setf block-label label
+                     block-text (make-string-output-stream)))
              (append-line-to-block (line)
                (when block-label
                  (format block-text "~a~%" line)))
