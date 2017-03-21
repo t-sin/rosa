@@ -45,6 +45,14 @@
        (or (char= (char line 1) #\:)
            (char= (char line 1) #\;))))
 
+(defun remove-eol (string)
+  "Remove EOL positioned in front of EOF"
+  (let* ((tail-pos (1- (length string))))
+    (cond ((< tail-pos 0) "")
+          ((char= (char string tail-pos) #\newline)
+           (subseq string 0 tail-pos))
+          (t string))))
+
 (defun push-body (hash label body)
   (let ((key (intern label :keyword)))
     (if (gethash key hash)
@@ -62,7 +70,8 @@
                (push-body rosa-data label text))
              (update-state-as-block (label)
                (when block-label
-                 (push-body rosa-data block-label (get-output-stream-string block-text)))
+                 (push-body rosa-data block-label
+                            (remove-eol(get-output-stream-string block-text))))
                (setf block-label label
                      block-text (make-string-output-stream)))
              (append-line-to-block (line)
