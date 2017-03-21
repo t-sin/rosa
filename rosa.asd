@@ -4,7 +4,7 @@
 |#
 
 #|
-  Simple markup language for named text parts
+  Text labeling language
 
   Author: Shinichi TANAKA (shinichi.tanaka45@gmail.com)
 |#
@@ -22,7 +22,7 @@
                :trivial-gray-streams)
   :components ((:module "src"
                 :components ((:file "rosa"))))
-  :description "Simple markup language for named text parts"
+  :description "Text labeling language"
   :long-description
   #.(with-open-file (stream (merge-pathnames
                              #p"README.markdown"
