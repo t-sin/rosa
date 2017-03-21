@@ -53,7 +53,7 @@
           (setf (gethash key hash) val)))))
 
 (defun peruse (stream)
-  "parse and return parsed rosa data as hash table"
+  "parse stream and return parsed rosa data as hash table"
   (let ((rosa-data (make-hash-table))
         (block-label)
         (block-text))
