@@ -69,12 +69,15 @@
         (block-label)
         (block-text))
     (labels ((update-state-as-inline (label text)
+               (when block-label
+                 (push-body rosa-data block-label
+                            (remove-eol (get-output-stream-string block-text))))
                (setf block-label nil)
                (push-body rosa-data label text))
              (update-state-as-block (label)
                (when block-label
                  (push-body rosa-data block-label
-                            (remove-eol(get-output-stream-string block-text))))
+                            (remove-eol (get-output-stream-string block-text))))
                (setf block-label label
                      block-text (make-string-output-stream)))
              (append-line-to-block (line)
