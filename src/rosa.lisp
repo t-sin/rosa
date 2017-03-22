@@ -18,7 +18,7 @@
                                       (stream-read-char ,instream)
                                     (and line eof)))
                      #'(lambda () (read-line ,instream nil :eof)))))
-     (declare (ignorable reader peeker unreader))
+     (declare (ignorable linereader))
      ,@body))
 
 (defun label-p (text)
