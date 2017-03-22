@@ -69,8 +69,7 @@ We can consider **Label** as *key* and **body** as *value*.
 
 
 :key value
-;phew, engrish... I'm tired now...
-"))
+;phew, engrish... I'm tired now..."))
       hash)
     :test #'equalp)
 
@@ -95,8 +94,7 @@ We can consider **Label** as *key* and **body** as *value*.
 
 
 :key value
-;phew, engrish... I'm tired now...
-"))
+;phew, engrish... I'm tired now..."))
     :test #'plist-equal)
 
 ;;; indexing API; listing labels.

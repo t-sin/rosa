@@ -182,9 +182,9 @@
 
   (subtest "when block ends with comment, block body does not include eol"
     (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep thought.~%;NGAHHHHHH")
-                   `(:|block| #(,(format nil "oh,~%deep thought.~%"))))
+                   `(:|block| #(,(format nil "oh,~%deep thought."))))
     (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep thought.~%;NGAHHHHHH~%:label body")
-                   `(:|block| #(,(format nil "oh,~%deep thought.~%"))
+                   `(:|block| #(,(format nil "oh,~%deep thought."))
                      :|label| #("body")))))
 
 (subtest "escape sequences"
@@ -217,7 +217,7 @@
 
   (subtest "escape sequences in a row (issue #12)"
     (perusing-test (format nil ":block~%:; is semicolon~%:: is colon~%")
-                   `(:|block| #(,(format nil "; is semicolon~%: is colon~%"))))
+                   `(:|block| #(,(format nil "; is semicolon~%: is colon"))))
     (perusing-test (format nil ":block~%:; is semicolon~%:: is colon~%::: is colon colon")
                    `(:|block| #(,(format nil "; is semicolon~%: is colon~%:: is colon colon"))))))
 
