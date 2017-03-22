@@ -89,7 +89,10 @@
                           (if (label-p label)
                               (update-state-as-inline label text)
                               (append-line-to-block (format nil "~a ~a" label text))))
-                        (update-state-as-block (subseq s 1)))))
+                        (let ((label (subseq s 1)))
+                          (if (label-p label)
+                              (update-state-as-block (subseq s 1))
+                              (append-line-to-block label))))))
              (otherwise-line (s) (append-line-to-block s)))
       (with-linereader (stream)
         (loop :named parse
