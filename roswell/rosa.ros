@@ -17,35 +17,32 @@ exec ros -Q -- $0 "$@"
 
 (defun print-usage ()
   (format *error-output* "Rosa - text labeling language CLI
+
 usage: rosa index [OPTIONS] [FILE]
        rosa pick [OPTIONS] LABEL [FILE]
        rosa dump [OPTIONS] [FILE]
 
 DESCRIPTION
-    Rosa extract key-value structure from input. Key as 'label'
-    and value as 'body'.
+    Rosa extract key-value structure from input. Key as 'label' and value as 'body'.
 
     If not supplied FILE, rosa reads from standard input.
 
 COMMANDS
-    Each commands have its shorthand; the first letter. For
-    instance, shorthand of `index` is `i`.
+    Each commands have its shorthand; the first letter. For instance, shorthand of
+    `index` is `i`.
 
     rosa index [FILE]
-        List all labels from input. By default, formatted as
-        line-based plain text.
+        List all labels from input. By default, formatted as line-based plain text.
 
     rosa pick LABEL [FILE]
-        Pick up the value(s) corresponding to the label, from
-        input. By default, rosa returns only first body of
-        all appearance.
+        Pick up the value(s) corresponding to the label, from input. By default,
+        rosa returns only first body of all appearance.
 
     rosa dump [FILE]
         Parse and print entire key-value data from input.
 
 FORMATTING OPTIONS
-    Output formatting type. By default, output formatted as
-    S-expression.
+    Output formatting type. By default, output formatted as S-expression.
 
       -s
           Format output as S-expression.
@@ -57,12 +54,11 @@ PICKING UP OPTIONS
     Available with pick command.
 
       -a
-          If supplied, all bodies are printed as formatting
-          type.
+          If supplied, all bodies are printed as formatting type.
 
       -n NUM
-          Specify number of bodies picking up from head.
-          default, no supplied, NUM set as 1.
+          Specify number of bodies picking up from head. By default, no supplied,
+          NUM set as 1.
 
       -t
           Tell rosa to pick up tail.
