@@ -1,5 +1,6 @@
 # Rosa - text labeling language
 
+[![Quicklisp](http://quickdocs.org/badge/rosa.svg)](http://quickdocs.org/rosa/)
 [![Build Status](https://travis-ci.org/t-sin/rosa.svg)](https://travis-ci.org/t-sin/rosa)
 
 Rosa is a text labeling language.
