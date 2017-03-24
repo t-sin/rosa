@@ -25,8 +25,6 @@ It is a string represented as regex `[a-z][a-z0-9-]*`.
 It is a array of strings.
 Note that each strings in **body** can include newline.
 
-We can consider **Label** as *key* and **body** as *value*.
-
 
 ## Syntax
 
@@ -176,7 +174,7 @@ Use [roswell](https://github.com/roswell/roswell/).
 $ ros install t-sin/rosa
 ```
 
-If you need speed, compile rosa.
+If you feel `rosa` command is very slow, compile `rosa`.
 
 ```
 $ cd ~/.roswell/bin/
