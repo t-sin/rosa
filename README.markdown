@@ -5,7 +5,10 @@
 
 Rosa is a text labeling language.
 
+Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
+
 > Stat rosa pristina nomine, nomina nuda tenemus.
+
 
 
 ## Basis
