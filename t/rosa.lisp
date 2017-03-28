@@ -120,5 +120,11 @@ We can consider **Label** as *key* and **body** as *value*.
   (let ((data (peruse in)))
     (is (peruse (indite data)) data)))
 
+;;; indite can takes plist
+(with-input-from-string (in *test-string*)
+  (let ((data (peruse-as-plist in))
+        (expected (peruse in)))
+    (is (peruse (indite data)) expected)))
+
 
 (finalize)
