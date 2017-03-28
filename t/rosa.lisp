@@ -118,7 +118,7 @@ We can consider **Label** as *key* and **body** as *value*.
 ;;; rosa write data into a string
 (with-input-from-string (in *test-string*)
   (let ((data (peruse in)))
-    (is data (peruse (indite data)))))
+    (is (peruse (indite data)) data)))
 
 
 (finalize)
