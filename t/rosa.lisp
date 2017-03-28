@@ -115,5 +115,10 @@ We can consider **Label** as *key* and **body** as *value*.
     #("Rosa - text labeling language")
     :test #'equalp)
 
+;;; rosa write data into a string
+(with-input-from-string (in *test-string*)
+  (let ((data (peruse in)))
+    (is data (peruse (indite data)))))
+
 
 (finalize)
