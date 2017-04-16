@@ -25,3 +25,11 @@
     (setf (gethash :|label|) #((foramt nil "I hear a voice,~%hear a voice calling out to me~%")))
     (is (indite hash)
         (foramt nil ":label~%I hear a voice,~%hear a voice calling out to me~%"))))
+
+(subtest "escape ':' and ';' in block"
+  (is (indite `(:|label| #(,(format nil ":I am Calling, calling now~%;Spirit rise and falling"))))
+      (format nil ":label~%::I am Calling, calling now~%:;Spirit rise and falling"))
+  (let ((hash (make-hash-table)))
+    (setf (gethash :|label|) #((format nil ":I am Calling, calling now~%;Spirit rise and falling")))
+    (is (indite hash)
+        (format nil ":label~%::I am Calling, calling now~%:;Spirit rise and falling"))))
