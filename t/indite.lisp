@@ -33,3 +33,25 @@
     (setf (gethash :|label|) #((format nil ":I am Calling, calling now~%;Spirit rise and falling")))
     (is (indite hash)
         (format nil ":label~%::I am Calling, calling now~%:;Spirit rise and falling"))))
+
+(subtest "multiple data"
+  (is (indite `(:|label| #(,(format nil "Save your tears. For the day.")
+                           ,(format nil "When our pain is far behind.")))
+              (format nil ":label ~a~%:label ~a"
+                      "Save your tears. For the day."
+                      "our pain is far behind.")))
+  (is (indite `(:|label| #(,(format nil "On your feet.~%Come with me.")
+                           ,(format nil "We are soldiers stand or die.")))
+              (format nil ":label~%~a~%:label ~a"
+                      "On your feet.~%Come with me."
+                      "We are soldiers stand or die.")))
+  (is (indite `(:|label| #(,(format nil "Save your fears.")
+                           ,(format nil "Take your place.~%Save them for the judgement day.")))
+              (format nil ":label~%~a~%:label ~a"
+                      "Save your fears."
+                      "Take your place.~%Save them for the judgement day.")))
+  (is (indite `(:|label| #(,(format nil "Fast and free~%Follow me")
+                           ,(format nil "Time to make the sacrifice~%We rise or fall ")))
+              (format nil ":label~%~a~%:label~%~a"
+                      "Fast and free~%Follow me"
+                      "Time to make the sacrifice~%We rise or fall "))))
