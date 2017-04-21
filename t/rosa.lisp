@@ -118,13 +118,17 @@ We can consider **Label** as *key* and **body** as *value*.
 ;;; rosa write data into a string
 (with-input-from-string (in *test-string*)
   (let ((data (peruse in)))
-    (is (peruse (indite data)) data)))
+    (with-input-from-string (in (indite data))
+      (is (peruse in) data))))
 
 ;;; indite can takes plist
-(with-input-from-string (in *test-string*)
-  (let ((data (peruse-as-plist in))
-        (expected (peruse in)))
-    (is (peruse (indite data)) expected)))
+
+(let ((plist-data (with-input-from-string (in *test-string*)
+                    (peruse-as-plist in)))
+      (expected (with-input-from-string (in *test-string*)
+                  (peruse in))))
+  (with-input-from-string (in (indite plist-data))
+    (is (peruse in) expected)))
 
 
 (finalize)
