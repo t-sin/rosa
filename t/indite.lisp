@@ -8,6 +8,8 @@
 (in-package :rosa-test.indite)
 
 
+(plan 5)
+
 (defun test-indite (actual-plist expected-string)
   (is (indite actual-plist) expected-string)
   (let ((actual-hash (plist-hash-table actual-plist)))
@@ -53,3 +55,5 @@
                (format nil ":label~%~a~%~a~%:label~%~a~%~a~%"
                        "Fast and free" "Follow me"
                        "Time to make the sacrifice" "We rise or fall ")))
+
+(finalize)
