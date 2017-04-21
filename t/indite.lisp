@@ -21,7 +21,7 @@
                (format nil ":label ghost in the shell~%")))
 
 (subtest "mapping of block label (has newline)"
-  (test-indite `(:|label| #(,(foramt nil "I hear a voice,~%hear a voice calling out to me~%")))
+  (test-indite `(:|label| #(,(format nil "I hear a voice,~%hear a voice calling out to me~%")))
                (foramt nil ":label~%I hear a voice,~%hear a voice calling out to me~%")))
 
 (subtest "escape ':' and ';' in block"
