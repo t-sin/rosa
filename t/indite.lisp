@@ -34,7 +34,7 @@
                             ,(format nil "When our pain is far behind.")))
                (format nil ":label ~a~%:label ~a~%"
                        "Save your tears. For the day."
-                       "our pain is far behind."))
+                       "When our pain is far behind."))
   (diag "block - inline")
   (test-indite `(:|label| #(,(format nil "On your feet.~%Come with me.")
                             ,(format nil "We are soldiers stand or die.")))
