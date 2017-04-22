@@ -119,7 +119,7 @@ We can consider **Label** as *key* and **body** as *value*.
 (with-input-from-string (in *test-string*)
   (let ((data (peruse in)))
     (with-input-from-string (in (indite data))
-      (is (peruse in) data))))
+      (is (peruse in) data :test #'equalp))))
 
 ;;; indite can takes plist
 
@@ -128,7 +128,7 @@ We can consider **Label** as *key* and **body** as *value*.
       (expected (with-input-from-string (in *test-string*)
                   (peruse in))))
   (with-input-from-string (in (indite plist-data))
-    (is (peruse in) expected)))
+    (is (peruse in) expected :test #'equalp)))
 
 
 (finalize)
