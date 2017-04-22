@@ -115,5 +115,20 @@ We can consider **Label** as *key* and **body** as *value*.
     #("Rosa - text labeling language")
     :test #'equalp)
 
+;;; rosa write data into a string
+(with-input-from-string (in *test-string*)
+  (let ((data (peruse in)))
+    (with-input-from-string (in (indite data))
+      (is (peruse in) data :test #'equalp))))
+
+;;; indite can takes plist
+
+(let ((plist-data (with-input-from-string (in *test-string*)
+                    (peruse-as-plist in)))
+      (expected (with-input-from-string (in *test-string*)
+                  (peruse in))))
+  (with-input-from-string (in (indite plist-data))
+    (is (peruse in) expected :test #'equalp)))
+
 
 (finalize)

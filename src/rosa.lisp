@@ -2,9 +2,12 @@
 (defpackage rosa
   (:use :cl
         :trivial-gray-streams)
+  (:import-from :alexandria
+                :plist-hash-table)
   (:import-from :anaphora
                 :aif)
   (:export :index
+           :indite
            :peruse
            :peruse-as-plist
            :pick))
@@ -109,6 +112,38 @@
                      ((and (> (length line) 0)
                            (char= (char line 0) #\;)) :do-nothing)
                      (t (otherwise-line line))))))))
+
+
+
+(defmethod indite ((data hash-table))
+  "write key-value data into string."
+  (with-output-to-string (out)
+    (labels ((block-p (s) (find #\newline s))
+             (print-inline (name body)
+               (format out ":~a ~a~%" name body))
+             (print-block (name body)
+               (format out ":~a~%~a~%" name
+                       (with-output-to-string (out)
+                         (with-input-from-string (in body)
+                           (loop
+                              :for ch := (read-char in nil :eof)
+                              :until (eq ch :eof)
+                              :do (cond ((char= ch #\:) (format out "::"))
+                                        ((char= ch #\;) (format out ":;"))
+                                        (t (write-char ch out))))))))
+             (print-label (label-name body)
+               (if (block-p body)
+                   (print-block label-name body)
+                   (print-inline label-name body))))
+      (loop
+         :for k :being :each :hash-keys :of data :using (:hash-value v)
+         :do (if (stringp v)
+                 (print-label k v)
+                 (loop :for s :across v :do (print-label k s)))))))
+
+(defmethod indite ((data list))
+  "indite plist."
+  (indite (plist-hash-table data)))
 
 (defun peruse-as-plist (stream)
   "read key-value data as plist."

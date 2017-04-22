@@ -18,7 +18,8 @@
   :version "0.1"
   :author "Shinichi TANAKA"
   :license "MIT"
-  :depends-on (:anaphora
+  :depends-on (:alexandria
+               :anaphora
                :trivial-gray-streams)
   :components ((:module "src"
                 :components ((:file "rosa"))))
