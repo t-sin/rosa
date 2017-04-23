@@ -15,25 +15,19 @@
 (in-package :rosa-asd)
 
 (defsystem rosa
+  :class :package-inferred-system
   :version "0.1"
   :author "Shinichi TANAKA"
   :license "MIT"
-  :depends-on (:alexandria
+  :depends-on ("rosa/main"
+               :alexandria
                :anaphora
-               :trivial-gray-streams)
-  :components ((:module "src"
-                :components ((:file "rosa"))))
+               :trivial-gray-streams
+               "")
   :description "Text labeling language"
-  :long-description
-  #.(with-open-file (stream (merge-pathnames
-                             #p"README.markdown"
-                             (or *load-pathname* *compile-file-pathname*))
-                            :if-does-not-exist nil
-                            :direction :input)
-      (when stream
-        (let ((seq (make-array (file-length stream)
-                               :element-type 'character
-                               :fill-pointer t)))
-          (setf (fill-pointer seq) (read-sequence seq stream))
-          seq)))
   :in-order-to ((test-op (test-op rosa-test))))
+
+(register-system-package "alexandria" '(:alexandria))
+(register-system-package "anaphora" '(:anaphora))
+(register-system-package "trivial-gray-streams"
+                         '(:trivial-gray-streams))
