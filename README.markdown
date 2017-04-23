@@ -100,6 +100,71 @@ An example bellow:
 
 ## Usage
 
+### As library
+
+To parse plain text as rosa, use one of `rosa:peruse` or `rosa:peruse-as-plist`.
+
+Examples:
+
+```lisp
+CL-USER> (setf readme "
+:title Rosa - text labeling language
+:author Shinichi TANAKA
+:modify-month 2016-02
+:modify-month 2017-04
+:body
+
+Rosa is a text labeling language.
+
+Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
+
+> Stat rosa pristina nomine, nomina nuda tenemus.
+
+...")
+
+CL-USER> (with-input-from-string (in readme)
+           (rosa:peruse in))
+; not human readable...
+#<HASH-TABLE :TEST EQL :COUNT 4 {1002704953}>
+
+CL-USER> (with-input-from-string (in readme)
+           (rosa:peruse-as-plist in))
+; wow! readable!
+(:|title| #("Rosa - text labeling language") :|author| #("Shinichi TANAKA")
+ :|modify-month| #("2016-02" "2017-04") :|body|
+ #("
+Rosa is a text labeling language.
+
+Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
+
+> Stat rosa pristina nomine, nomina nuda tenemus.
+
+..."))
+```
+
+Rosa can sirialize key-value data. `indite` serialize hash-table and plist into string like this:
+
+```lisp
+CL-USRE> (with-input-from-string (in readme)
+           (rosa:indite (rosa:peruse-as-plist in)))
+":title Rosa - text labeling language
+:author Shinichi TANAKA
+:modify-month 2016-02
+:modify-month 2017-04
+:body
+
+Rosa is a text labeling language.
+
+Or for Japanese, see [this article](http:://octahedron.hatenablog.jp/entry/2017/03/24/011008)
+
+> Stat rosa pristina nomine, nomina nuda tenemus.
+
+...
+"
+```
+
+### As CLI front-end
+
 Rosa has a CLI front-end for parse rosa markup language.
 `rosa` is it.
 
