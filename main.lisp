@@ -8,7 +8,7 @@
            :peruse
            :peruse-as-plist
            :pick))
-(in-package :rosa)
+(in-package :rosa/main)
 
 
 (defun peruse-as-plist (stream)
