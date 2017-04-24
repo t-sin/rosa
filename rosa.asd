@@ -21,8 +21,19 @@
   :license "MIT"
   :depends-on ("rosa/main")
   :description "Text labeling language"
-  :in-order-to ((test-op (load-op :rosa-test))))
+  :in-order-to ((test-op (load-op :rosa/tests)))
+  :perform (test-op (o c) (symbol-call :rosa/tests :test-suite)))
 
-(register-system-packages "alexandria" '(:alexandria))
-(register-system-packages "anaphora" '(:anaphora))
-(register-system-packages "trivial-gray-streams" '(:trivial-gray-streams))
+(register-system-packages :alexandria '(:alexandria))
+(register-system-packages :anaphora '(:anaphora))
+(register-system-packages :trivial-gray-streams '(:trivial-gray-streams))
+
+
+(defsystem :rosa/tests
+  :class :package-inferred-system
+  :depends-on ("rosa/tests/basis"
+               "rosa/tests/semantics"
+               "rosa/tests/indite"))
+
+(register-system-packages :flexi-streams '(:flexi-streams))
+(register-system-packages :prove '(:prove))
