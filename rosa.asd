@@ -21,8 +21,7 @@
   :license "MIT"
   :depends-on ("rosa/main")
   :description "Text labeling language"
-  :in-order-to ((test-op (load-op :rosa/tests)))
-  :perform (test-op (o c) (symbol-call :rosa/tests :test-suite)))
+  :in-order-to ((test-op (test-op :rosa/tests))))
 
 (register-system-packages :alexandria '(:alexandria))
 (register-system-packages :anaphora '(:anaphora))
@@ -33,7 +32,8 @@
   :class :package-inferred-system
   :depends-on ("rosa/tests/basis"
                "rosa/tests/semantics"
-               "rosa/tests/indite"))
+               "rosa/tests/indite")
+  :perform (test-op (o c) (uiop:symbol-call :prove ':run c)))
 
 (register-system-packages :flexi-streams '(:flexi-streams))
 (register-system-packages :prove '(:prove))
