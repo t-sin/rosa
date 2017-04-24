@@ -1,5 +1,5 @@
 (in-package :cl-user)
-(defpackage :rosa/tests/util
+(uiop:define-package :rosa/tests/util
   (:use :cl)
   (:export :plist-equal))
 (in-package :rosa/tests/util)

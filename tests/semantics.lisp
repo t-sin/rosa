@@ -1,5 +1,5 @@
 (in-package :cl-user)
-(defpackage :rosa/tests/semantics
+(uiop:define-package :rosa/tests/semantics
   (:use :cl
         :rosa
         :rosa/tests/util

@@ -1,5 +1,5 @@
 (in-package :cl-user)
-(defpackage :rosa/tests/indite
+(uiop:define-package :rosa/tests/indite
   (:use :cl
         :rosa
         :prove)
