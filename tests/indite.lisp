@@ -1,11 +1,11 @@
 (in-package :cl-user)
-(defpackage :rosa-test.indite
+(defpackage :rosa/tests/indite
   (:use :cl
         :rosa
         :prove)
   (:import-from :alexandria
                 :plist-hash-table))
-(in-package :rosa-test.indite)
+(in-package :rosa/tests/indite)
 
 
 (plan 5)

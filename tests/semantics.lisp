@@ -1,10 +1,10 @@
 (in-package :cl-user)
-(defpackage rosa-semantics-test
+(defpackage :rosa/tests/semantics
   (:use :cl
         :rosa
-        :rosa-test-util
+        :rosa/tests/util
         :prove))
-(in-package :rosa-semantics-test)
+(in-package :rosa/tests/semantics)
 
 (plan 8)
 
