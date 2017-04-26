@@ -9,31 +9,25 @@
   Author: Shinichi TANAKA (shinichi.tanaka45@gmail.com)
 |#
 
-(in-package :cl-user)
-(defpackage rosa-asd
-  (:use :cl :asdf))
-(in-package :rosa-asd)
-
-(defsystem rosa
+(defsystem :rosa
+  :class :package-inferred-system
   :version "0.1"
   :author "Shinichi TANAKA"
   :license "MIT"
-  :depends-on (:alexandria
-               :anaphora
-               :trivial-gray-streams)
-  :components ((:module "src"
-                :components ((:file "rosa"))))
+  :depends-on ("rosa/main")
   :description "Text labeling language"
-  :long-description
-  #.(with-open-file (stream (merge-pathnames
-                             #p"README.markdown"
-                             (or *load-pathname* *compile-file-pathname*))
-                            :if-does-not-exist nil
-                            :direction :input)
-      (when stream
-        (let ((seq (make-array (file-length stream)
-                               :element-type 'character
-                               :fill-pointer t)))
-          (setf (fill-pointer seq) (read-sequence seq stream))
-          seq)))
-  :in-order-to ((test-op (test-op rosa-test))))
+  :in-order-to ((test-op (test-op :rosa/tests))))
+
+(register-system-packages :alexandria '(:alexandria))
+(register-system-packages :anaphora '(:anaphora))
+(register-system-packages :trivial-gray-streams '(:trivial-gray-streams))
+
+
+(defsystem :rosa/tests
+  :class :package-inferred-system
+  :depends-on ("rove"
+               "flexi-streams"
+               "rosa/tests/basis"
+               "rosa/tests/semantics"
+               "rosa/tests/indite")
+  :perform (test-op (o c) (uiop:symbol-call :rove ':run c)))

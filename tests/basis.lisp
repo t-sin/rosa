@@ -1,8 +1,8 @@
 (in-package :cl-user)
-(defpackage rosa-test
+(uiop:define-package :rosa/tests/basis
   (:use :cl
         :rosa
-        :rosa-test-util
+        :rosa/tests/util
         :prove)
   (:import-from :alexandria
                 :set-equal)
@@ -10,7 +10,7 @@
                 :make-flexi-stream
                 :string-to-octets
                 :with-input-from-sequence))
-(in-package :rosa-test)
+(in-package :rosa/tests/basis)
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :rosa)' in your Lisp.
 

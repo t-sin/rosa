@@ -1,8 +1,8 @@
 (in-package :cl-user)
-(defpackage rosa-test-util
+(uiop:define-package :rosa/tests/util
   (:use :cl)
   (:export :plist-equal))
-(in-package :rosa-test-util)
+(in-package :rosa/tests/util)
 
 
 (defun plist-equal (plist1 plist2)
