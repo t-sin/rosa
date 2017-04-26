@@ -9,11 +9,6 @@
   Author: Shinichi TANAKA (shinichi.tanaka45@gmail.com)
 |#
 
-(in-package :cl-user)
-(defpackage rosa-asd
-  (:use :cl :asdf))
-(in-package :rosa-asd)
-
 (defsystem :rosa
   :class :package-inferred-system
   :version "0.1"
@@ -30,10 +25,9 @@
 
 (defsystem :rosa/tests
   :class :package-inferred-system
-  :depends-on ("rosa/tests/basis"
+  :depends-on ("rove"
+               "flexi-streams"
+               "rosa/tests/basis"
                "rosa/tests/semantics"
                "rosa/tests/indite")
-  :perform (test-op (o c) (uiop:symbol-call :prove ':run c)))
-
-(register-system-packages :flexi-streams '(:flexi-streams))
-(register-system-packages :prove '(:prove))
+  :perform (test-op (o c) (uiop:symbol-call :rove ':run c)))
