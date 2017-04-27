@@ -55,14 +55,14 @@
            (subseq string 0 tail-pos))
           (t string))))
 
-(defun push-body (hash label body)
-  (let ((key (intern label :keyword)))
+(defun push-body (hash label body label-normalize-fn)
+  (let ((key (intern (funcall label-normalize-fn label) :keyword)))
     (if (gethash key hash)
         (vector-push-extend body (gethash key hash))
         (let ((val (make-array 1 :initial-element body :fill-pointer 1 :adjustable t)))
           (setf (gethash key hash) val)))))
 
-(defun peruse (stream)
+(defun peruse (stream &optional (label-normalize-fn #'identity))
   "parse stream and return parsed rosa data as hash table"
   (let ((rosa-data (make-hash-table))
         (block-label)
@@ -70,13 +70,15 @@
     (labels ((update-state-as-inline (label text)
                (when block-label
                  (push-body rosa-data block-label
-                            (remove-eol (get-output-stream-string block-text))))
+                            (remove-eol (get-output-stream-string block-text))
+                            label-normalize-fn))
                (setf block-label nil)
-               (push-body rosa-data label text))
+               (push-body rosa-data label text label-normalize-fn))
              (update-state-as-block (label)
                (when block-label
                  (push-body rosa-data block-label
-                            (remove-eol (get-output-stream-string block-text))))
+                            (remove-eol (get-output-stream-string block-text))
+                            label-normalize-fn))
                (setf block-label label
                      block-text (make-string-output-stream)))
              (append-line-to-block (line)

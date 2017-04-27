@@ -29,5 +29,6 @@
                "flexi-streams"
                "rosa/tests/basis"
                "rosa/tests/semantics"
+               "rosa/tests/peruse"
                "rosa/tests/indite")
   :perform (test-op (o c) (uiop:symbol-call :rove ':run c)))
