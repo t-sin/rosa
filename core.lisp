@@ -25,13 +25,16 @@
   ;; but this impl depends on ASCII-like char-code...
   (labels ((identifier-first-char-p (ch)
              (let ((ch-code (char-code ch)))
-               (and (<= (char-code #\a) ch-code)
-                    (>= (char-code #\z) ch-code))))
+               (or (and (<= (char-code #\a) ch-code)
+                        (>= (char-code #\z) ch-code))
+                   (and (<= (char-code #\A) ch-code)
+                        (>= (char-code #\Z) ch-code)))))
            (identifier-char-p (ch)
              (let ((ch-code (char-code ch)))
                (or (identifier-first-char-p ch)
                    (and (<= (char-code #\0) ch-code)
                         (>= (char-code #\9) ch-code))
+                   (char= ch #\_)
                    (char= ch #\-)))))
     (loop
        :for ch :across text
