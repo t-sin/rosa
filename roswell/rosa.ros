@@ -5,9 +5,9 @@ exec ros -Q -- $0 "$@"
 |#
 (defpackage :rosa.cli
   (:use :cl))
-(ql:quickload '(:rosa-cli) :silent t)
+(ql:quickload '(:rosa/cli) :silent t)
 (in-package :rosa.cli)
 
 (defun main (&rest argv)
-  (apply #'rosa.cli:cli-main argv))
+  (apply #'rosa/cli:cli-main argv))
 ;;; vim: set ft=lisp lisp:
