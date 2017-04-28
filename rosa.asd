@@ -15,6 +15,7 @@
   :author "Shinichi TANAKA"
   :license "MIT"
   :depends-on ("rosa/main")
+  :entry-point "rosa/cli:entry-point"
   :description "Text labeling language"
   :in-order-to ((test-op (test-op :rosa/tests))))
 
@@ -22,6 +23,13 @@
 (register-system-packages :anaphora '(:anaphora))
 (register-system-packages :trivial-gray-streams '(:trivial-gray-streams))
 
+(defsystem :rosa/cli
+  :class :package-inferred-system
+  :depends-on ("cl-yaml"
+               "inquisitor"
+               "jonathan"
+               "rosa")
+  :entry-point "rosa/cli:entry-point")
 
 (defsystem :rosa/tests
   :class :package-inferred-system
