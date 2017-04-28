@@ -10,7 +10,6 @@ Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/0
 > Stat rosa pristina nomine, nomina nuda tenemus.
 
 
-
 ## Basis
 
 
@@ -162,6 +161,19 @@ Or for Japanese, see [this article](http:://octahedron.hatenablog.jp/entry/2017/
 ...
 "
 ```
+
+#### Label equality
+
+If you want, you can characterize label in using `peruse`. For instance, we can regards upcased strings are same as downcased strings, like this:
+
+```lisp
+CL-USER> (with-input-from-string (in ":label is upcased")
+            (rosa:peruse-as-plist in #'string-upcase))
+(:LABEL #("is upcased"))
+```
+
+Note that the label returned is `:LABEL`, is not `:|label|`.
+
 
 ### As CLI front-end
 
