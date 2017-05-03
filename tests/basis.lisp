@@ -14,7 +14,7 @@
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :rosa)' in your Lisp.
 
-(plan 5)
+(plan 7)
 
 
 (defvar *test-string* "
