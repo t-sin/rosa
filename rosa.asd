@@ -15,7 +15,6 @@
   :author "Shinichi TANAKA"
   :license "MIT"
   :depends-on ("rosa/main")
-  :entry-point "rosa/cli:entry-point"
   :description "Text labeling language"
   :in-order-to ((test-op (test-op :rosa/tests))))
 
