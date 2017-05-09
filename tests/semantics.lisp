@@ -6,7 +6,7 @@
         :prove))
 (in-package :rosa/tests/semantics)
 
-(plan 8)
+(plan 9)
 
 
 (defun perusing-test (actual expected)
@@ -57,6 +57,32 @@
       (perusing-test (format nil ":label so long~%:label2~%and thanks for all the fish")
                      '(:|label| #("so long")
                        :|label2| #("and thanks for all the fish"))))))
+
+(subtest "list notation for multiple inline label"
+  (perusing-test (format nil ":label>~%- spaaaaaaaace")
+                 '(:|label| #("spaaaaaaaace")))
+  (perusing-test (format nil ":label>~%- spaaaaaaaace~%- in space")
+                 '(:|label| #("spaaaaaaaace" "in space")))
+  (perusing-test (format nil ":label>~%- spaaaaaaaace~%- in space~%")
+                 '(:|label| #("spaaaaaaaace" "in space")))
+
+  (subtest "empty list is nil"
+    (perusing-test (format nil ":label>~%") nil)
+    (perusing-test (format nil ":label>") nil)
+
+    (subtest "lines starts with only '- ' are regarded as `list`"
+      (perusing-test (format nil ":label>~%-spaaaaaaaace")
+                     '(:|label| #("")))
+      (perusing-test (format nil ":label>~% - spaaaaaaaace")
+                     '(:|label| #("")))))
+
+  (subtest "empty lines are ignored"
+    (perusing-test (format nil ":label>~%- spaaaaaaaace~%")
+                   '(:|label| #("spaaaaaaaace")))
+    (perusing-test (format nil ":label>~%- spaaaaaaaace~%~%")
+                   '(:|label| #("spaaaaaaaace")))
+    (perusing-test (format nil ":label>~%- spaaaaaaaace~%~%- in space")
+                   '(:|label| #("spaaaaaaaace" "in space")))))
 
 (subtest "block labels"
   (diag "block label is consists of two parts; label line and following body line(s)")
