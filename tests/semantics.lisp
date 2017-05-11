@@ -71,10 +71,8 @@
     (perusing-test (format nil ":label>") nil)
 
     (subtest "lines starts with only '- ' are regarded as `list`"
-      (perusing-test (format nil ":label>~%-spaaaaaaaace")
-                     '(:|label| #("")))
-      (perusing-test (format nil ":label>~% - spaaaaaaaace")
-                     '(:|label| #("")))))
+      (perusing-test (format nil ":label>~%-spaaaaaaaace") nil)
+      (perusing-test (format nil ":label>~% - spaaaaaaaace") nil)))
 
   (subtest "empty lines are ignored"
     (perusing-test (format nil ":label>~%- spaaaaaaaace~%")
