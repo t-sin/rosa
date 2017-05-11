@@ -68,39 +68,58 @@
 (defun peruse (stream &optional (label-normalize-fn #'identity))
   "parse stream and return parsed rosa data as hash table"
   (let ((rosa-data (make-hash-table))
+        (block-type)
         (block-label)
         (block-text))
-    (labels ((update-state-as-inline (label text)
-               (when block-label
+    (labels ((push-body-when-block ()
+               (when (eq block-type :block)
                  (push-body rosa-data block-label
                             (remove-eol (get-output-stream-string block-text))
-                            label-normalize-fn))
-               (setf block-label nil)
+                            label-normalize-fn)))
+             (update-state-as-inline (label text)
+               (push-body-when-block)
+               (setf block-type nil
+                     block-label nil)
                (push-body rosa-data label text label-normalize-fn))
+             (update-state-as-list (label)
+               (push-body-when-block)
+               (setf block-type :list
+                     block-label label))
              (update-state-as-block (label)
-               (when block-label
-                 (push-body rosa-data block-label
-                            (remove-eol (get-output-stream-string block-text))
-                            label-normalize-fn))
-               (setf block-label label
+               (push-body-when-block)
+               (setf block-type :block
+                     block-label label
                      block-text (make-string-output-stream)))
-             (append-line-to-block (line)
-               (when block-label
-                 (format block-text "~a~%" line)))
+             (add-to-list (line)
+               (when (and (>= (length line) 2)
+                          (string= (subseq line 0 2) "- "))
+                 (push-body rosa-data block-label
+                            (subseq line 2) label-normalize-fn)))
+             (append-line (line)
+               (case block-type
+                 (:block (format block-text "~a~%" line))
+                 (:list (add-to-list line))))
              (colon-line (s)
                (if (escaped-line-p s)
-                   (append-line-to-block (subseq s 1))
-                   (aif (position #\space s)
-                        (let ((label (subseq s 1 anaphora:it))
-                              (text (subseq s (1+ anaphora:it))))
-                          (if (label-p label)
-                              (update-state-as-inline label text)
-                              (append-line-to-block (format nil "~a ~a" label text))))
-                        (let ((label (subseq s 1)))
-                          (if (label-p label)
-                              (update-state-as-block (subseq s 1))
-                              (append-line-to-block label))))))
-             (otherwise-line (s) (append-line-to-block s)))
+                   (append-line (subseq s 1))
+                   (let ((space-position (position #\space s)))
+                     (cond (space-position
+                            (let ((label (subseq s 1 space-position))
+                                  (text (subseq s (1+ space-position))))
+                              (if (label-p label)
+                                  (update-state-as-inline label text)
+                                  (append-line (subseq s 1)))))
+                           ((position #\> s)
+                            (let ((label (subseq s 1 (1- (length s)))))
+                              (if (label-p label)
+                                  (update-state-as-list label)
+                                  (append-line label))))
+                           (t
+                            (let ((label (subseq s 1)))
+                              (if (label-p label)
+                                  (update-state-as-block (subseq s 1))
+                                  (append-line label))))))))
+             (otherwise-line (s) (append-line s)))
       (with-linereader (stream)
         (loop :named parse
            :for line := (read-line stream nil :eof)
