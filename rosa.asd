@@ -19,7 +19,6 @@
   :in-order-to ((test-op (test-op :rosa/tests))))
 
 (register-system-packages :alexandria '(:alexandria))
-(register-system-packages :anaphora '(:anaphora))
 (register-system-packages :trivial-gray-streams '(:trivial-gray-streams))
 
 (defsystem :rosa/cli
