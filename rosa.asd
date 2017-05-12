@@ -11,7 +11,7 @@
 
 (defsystem :rosa
   :class :package-inferred-system
-  :version "0.1"
+  :version "1.0"
   :author "Shinichi TANAKA"
   :license "MIT"
   :depends-on ("rosa/main")
