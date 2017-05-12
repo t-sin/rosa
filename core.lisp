@@ -106,19 +106,10 @@
                      (cond (space-position
                             (let ((label (subseq s 1 space-position))
                                   (text (subseq s (1+ space-position))))
-                              (if (label-p label)
-                                  (update-state-as-inline label text)
-                                  (append-line (subseq s 1)))))
-                           ((position #\> s)
-                            (let ((label (subseq s 1 (1- (length s)))))
-                              (if (label-p label)
-                                  (update-state-as-list label)
-                                  (append-line label))))
-                           (t
-                            (let ((label (subseq s 1)))
-                              (if (label-p label)
-                                  (update-state-as-block (subseq s 1))
-                                  (append-line label))))))))
+                              (update-state-as-inline label text)))
+                           ((char= (char s (1- (length s))) #\>)
+                            (update-state-as-list (subseq s 1 (1- (length s)))))
+                           (t (update-state-as-block (subseq s 1)))))))
              (otherwise-line (s) (append-line s)))
       (with-linereader (stream)
         (loop :named parse
