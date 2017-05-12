@@ -20,31 +20,6 @@
      (declare (ignorable linereader))
      ,@body))
 
-(defun label-p (text)
-  "label identifier is defined by regex \"[a-z][a-z0-9-]*\""
-  ;; but this impl depends on ASCII-like char-code...
-  (labels ((identifier-first-char-p (ch)
-             (let ((ch-code (char-code ch)))
-               (or (and (<= (char-code #\a) ch-code)
-                        (>= (char-code #\z) ch-code))
-                   (and (<= (char-code #\A) ch-code)
-                        (>= (char-code #\Z) ch-code)))))
-           (identifier-char-p (ch)
-             (let ((ch-code (char-code ch)))
-               (or (identifier-first-char-p ch)
-                   (and (<= (char-code #\0) ch-code)
-                        (>= (char-code #\9) ch-code))
-                   (char= ch #\_)
-                   (char= ch #\-)))))
-    (loop
-       :for ch :across text
-       :with first-p := t
-       :always (if first-p
-                   (progn
-                     (setf first-p nil)
-                     (identifier-first-char-p ch))
-                   (identifier-char-p ch)))))
-
 (defun escaped-line-p (line)
   (and (> (length line) 2)
        (or (char= (char line 1) #\:)
