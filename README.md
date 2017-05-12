@@ -21,7 +21,7 @@ Here, a pair in rosa data structure, it consist of just one **label** and multip
 Because of it, array of **bodies** is simply called **body**.
 
 **Label** is a meta data of **body**.
-It is a string represented as regex `[a-zA-Z][a-zA-Z0-9-_]*`.
+It is a string represented as regex `[not-space-chars]+`.
 
 **Body** is a value of **label**.
 It is a array of strings.

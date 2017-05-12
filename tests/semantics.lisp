@@ -25,7 +25,7 @@
 (subtest "inline labels"
   (diag "inline label is consists of two parts; label string and body string")
 
-  (subtest "inline label is represent as regexp `^:([not-space-chars][not-space-chars]*) (.+)$`"
+  (subtest "inline label is represent as regexp `^:([not-space-chars]+) (.+)$`"
     (perusing-test ":abcd is read as label"
                    '(:|abcd| #("is read as label")))
     (perusing-test ":abCD is read as label"
@@ -95,13 +95,13 @@
 (subtest "block labels"
   (diag "block label is consists of two parts; label line and following body line(s)")
 
-  (subtest "block label is represent as regexp `^:([not-space-chars][not-space-chars]*)$`"
+  (subtest "block label is represent as regexp `^:([not-space-chars]+)$`"
     (diag "single appearance of label line")
     (perusing-test (format nil ":abcd") '(:|abcd| #("")))
     (perusing-test (format nil ":abcd-efg") '(:|abcd-efg| #("")))
     (perusing-test (format nil ":abcd-") '(:|abcd-| #(""))))
 
-  (subtest "block label is represent as regexp `^:([not-space-chars][not-space-chars]*)$`"
+  (subtest "block label is represent as regexp `^:([not-space-chars]+)$`"
     (perusing-test (format nil ":abcd~%is read as label")
                    '(:|abcd| #("is read as label")))
     (perusing-test (format nil ":abCD~%is read as label")

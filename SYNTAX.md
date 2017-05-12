@@ -7,7 +7,7 @@
 <SEMICOLON> ::= ? semicolon (`;`) ?
 <EOF> ::= ? end-of-file ?
 <EOL> ::= ? end-of-line (e.g. LF) ?
-<LABEL_IDENTIFER> ::= ? represented as regex `[a-zA-Z0-9][A-Za-z0-9-_]*` ?
+<LABEL_IDENTIFER> ::= ? represented as regex `[not-space-chars]+` ?
 <NOT_DELIMITER> ::= ? represent as regex `[^;:]` ?
 <ANYCHAR> ::= ? any charactor excluding <EOF> and <EOL> ?
 
