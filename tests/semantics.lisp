@@ -25,7 +25,7 @@
 (subtest "inline labels"
   (diag "inline label is consists of two parts; label string and body string")
 
-  (subtest "inline label is represent as regexp `^:([a-zA-Z0-9][a-zA-Z0-9-_]*) (.+)$`"
+  (subtest "inline label is represent as regexp `^:([not-space-chars][not-space-chars]*) (.+)$`"
     (perusing-test ":abcd is read as label"
                    '(:|abcd| #("is read as label")))
     (perusing-test ":abCD is read as label"
@@ -37,11 +37,11 @@
     (perusing-test ":abcd- is read as label"
                    '(:|abcd-| #("is read as label")))
     (perusing-test ":abcd_ is read as label"
-                   '(:|abcd_| #("is read as label"))))
-
-  (subtest "these are not inline labels"
-    (perusing-test ":-abcd is not read as label" nil)
-    (perusing-test ":_abcd is not read as label" nil))
+                   '(:|abcd_| #("is read as label")))
+    (perusing-test ":-abcd is read as label"
+                   '(:|-abcd| #("is read as label")))
+    (perusing-test ":_abcd is read as label"
+                   '(:|_abcd| #("is read as label"))))
 
   (subtest "body can include any characters except line-break"
     (perusing-test ":label body" '(:|label| #("body")))
@@ -69,10 +69,12 @@
   (subtest "label ends with '>'"
     (perusing-test (format nil ":label>~%- spaaaaaaaace")
                    '(:|label| #("spaaaaaaaace")))
+    (diag "this is read as block")
     (perusing-test (format nil ":label>label~%- spaaaaaaaace")
-                   nil)
+                   '(:|label>label| #("- spaaaaaaaace")))
+    (diag "this is read as list notatins")
     (perusing-test (format nil ":label>label>~%- spaaaaaaaace")
-                   nil))
+                   '(:|label>label| #("spaaaaaaaace"))))
 
   (subtest "empty list is nil"
     (perusing-test (format nil ":label>~%") nil)
@@ -93,13 +95,13 @@
 (subtest "block labels"
   (diag "block label is consists of two parts; label line and following body line(s)")
 
-  (subtest "block label is represent as regexp `^:([a-zA-Z0-9][a-zA-Z0-9-_]*)$`"
+  (subtest "block label is represent as regexp `^:([not-space-chars][not-space-chars]*)$`"
     (diag "single appearance of label line")
     (perusing-test (format nil ":abcd") '(:|abcd| #("")))
     (perusing-test (format nil ":abcd-efg") '(:|abcd-efg| #("")))
     (perusing-test (format nil ":abcd-") '(:|abcd-| #(""))))
 
-  (subtest "block label is represent as regexp `^:([a-zA-Z0-9][a-zA-Z0-9-_]*)$`"
+  (subtest "block label is represent as regexp `^:([not-space-chars][not-space-chars]*)$`"
     (perusing-test (format nil ":abcd~%is read as label")
                    '(:|abcd| #("is read as label")))
     (perusing-test (format nil ":abCD~%is read as label")
@@ -111,11 +113,11 @@
     (perusing-test (format nil ":abcd-~%is read as label")
                    '(:|abcd-| #("is read as label")))
     (perusing-test (format nil ":abcd_~%is read as label")
-                   '(:|abcd_| #("is read as label"))))
-
-  (subtest "these are not label"
-    (perusing-test (format nil ":-abcd~%is not read as label") nil)
-    (perusing-test (format nil ":_abcd~%is not read as label") nil))
+                   '(:|abcd_| #("is read as label")))
+    (perusing-test (format nil ":-abcd~%is read as label")
+                   '(:|-abcd| #("is read as label")))
+    (perusing-test (format nil ":_abcd~%is read as label")
+                   '(:|_abcd| #("is read as label"))))
 
   (subtest "body can include any lines except both kind of labels"
     (perusing-test (format nil ":label~%body") '(:|label| #("body")))
