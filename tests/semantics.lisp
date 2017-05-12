@@ -66,6 +66,14 @@
   (perusing-test (format nil ":label>~%- spaaaaaaaace~%- in space~%")
                  '(:|label| #("spaaaaaaaace" "in space")))
 
+  (subtest "label ends with '>'"
+    (perusing-test (format nil ":label>~%- spaaaaaaaace")
+                   '(:|label| #("spaaaaaaaace")))
+    (perusing-test (format nil ":label>label~%- spaaaaaaaace")
+                   nil)
+    (perusing-test (format nil ":label>label>~%- spaaaaaaaace")
+                   nil))
+
   (subtest "empty list is nil"
     (perusing-test (format nil ":label>~%") nil)
     (perusing-test (format nil ":label>") nil)
