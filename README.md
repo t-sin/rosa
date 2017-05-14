@@ -64,6 +64,26 @@ this is a body of block label.
 Twice or more appearance of **label** is allowed, because of each **body** stored in one array with appearance order.
 
 
+#### List notation
+
+When same label appear multiple times, all values are stored. Because of that, we can represent a list, like this:
+
+```
+:tags programming
+:tags lisp
+:tags common-lisp
+```
+
+Although that is ugly. In rosa, we can represent list-thing with shorthand notation. The following example is equivalent of above:
+
+```
+:tags>
+- programming
+- lisp
+- common-lisp
+```
+
+
 ### Comments
 
 Comments can be used.
