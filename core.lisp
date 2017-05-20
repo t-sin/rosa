@@ -3,6 +3,8 @@
   (:use :cl)
   (:import-from :alexandria
                 :plist-hash-table)
+  (:import-from :trivial-gray-streams
+                :fundamental-character-input-stream)
   (:export :indite
            :peruse))
 (in-package :rosa/core)
