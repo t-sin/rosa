@@ -207,4 +207,4 @@ PICKING UP OPTIONS
 
 (defun entry-point ()
   "Entry point for asdf:program-op."
-  (apply cli-main (uiop:command-line-arguments)))
+  (apply #'cli-main (uiop:command-line-arguments)))
