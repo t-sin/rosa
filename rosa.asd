@@ -21,12 +21,12 @@
 (register-system-packages :alexandria '(:alexandria))
 (register-system-packages :trivial-gray-streams '(:trivial-gray-streams))
 
-(defsystem :rosa/cli
+(defsystem :rosa.cli
   :class :package-inferred-system
   :depends-on ("cl-yaml"
                "inquisitor"
                "jonathan"
-               "rosa")
+               "rosa/cli")
   :entry-point "rosa/cli:entry-point")
 
 (defsystem :rosa/tests
