@@ -4,7 +4,8 @@
   (:import-from :alexandria
                 :plist-hash-table)
   (:import-from :trivial-gray-streams
-                :fundamental-character-input-stream)
+                :fundamental-character-input-stream
+                :stream-read-char)
   (:export :indite
            :peruse))
 (in-package :rosa/core)
