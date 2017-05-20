@@ -6,7 +6,7 @@
                 :peruse
                 :pick)
   (:import-from :cl-yaml
-                :emmit-to-string)
+                :emit-to-string)
   (:import-from :inquisitor
                 :detect-end-of-line
                 :make-external-format)
