@@ -14,12 +14,11 @@
   :version "1.0"
   :author "Shinichi TANAKA"
   :license "MIT"
-  :depends-on ("rosa/main")
+  :depends-on ("alexandria"
+               "trivial-gray-streams"
+               "rosa/main")
   :description "Text labeling language"
   :in-order-to ((test-op (test-op :rosa/tests))))
-
-(register-system-packages :alexandria '(:alexandria))
-(register-system-packages :trivial-gray-streams '(:trivial-gray-streams))
 
 (defsystem :rosa.cli
   :class :package-inferred-system
