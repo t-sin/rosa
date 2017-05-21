@@ -134,7 +134,7 @@ PICKING UP OPTIONS
            (with-open-file (,var ,pathname
                             :direction :input
                             :external-format (make-external-format
-                                              :utf8
+                                              :utf-8
                                               (detect-end-of-line (pathname ,pathname))))
              ,@body)
            (error-and-exit (format nil "no such file: ~s" ,pathname)))
