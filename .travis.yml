@@ -15,7 +15,6 @@ env:
 install:
   - curl -L https://raw.githubusercontent.com/roswell/roswell/release/scripts/install-for-ci.sh | sh
   - ros install fukamachi/rove
-  - git clone https://github.com/t-sin/rosa.git
 
 before_script:
   - ros --version
