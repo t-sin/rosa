@@ -3,10 +3,11 @@ sudo: false
 
 env:
   global:
-    - ROSWELL_INSTALL_DIR=$HOME/.roswell
-    - PATH=$PATH:$HOME/.roswell/bin
+    - ROSWELL_INSTALL_DIR: $HOME/.roswell
+    - PATH: $PATH:$HOME/.roswell/bin
+    - COVERAGE_EXCLUDE: tests:roswell
   matrix:
-    - LISP=sbcl
+    - LISP=sbcl COVERALLS=true
     - LISP=ccl-bin
     - LISP=abcl
     - LISP=ecl
