@@ -2,6 +2,7 @@
 
 [![Quicklisp](http://quickdocs.org/badge/rosa.svg)](http://quickdocs.org/rosa/)
 [![Build Status](https://travis-ci.org/t-sin/rosa.svg)](https://travis-ci.org/t-sin/rosa)
+[![Coverage Status](https://coveralls.io/repos/github/t-sin/rosa/badge.svg?branch=master)](https://coveralls.io/github/t-sin/rosa?branch=master)
 
 Rosa is a text labeling language.
 
