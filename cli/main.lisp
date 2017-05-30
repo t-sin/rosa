@@ -1,5 +1,5 @@
 (in-package :cl-user)
-(uiop:define-package :rosa/cli
+(uiop:define-package :rosa/cli/main
   (:use :cl)
   (:import-from :rosa/main
                 :index
@@ -14,7 +14,7 @@
                 :to-json)
   (:export :entry-point
            :cli-main))
-(in-package :rosa/cli)
+(in-package :rosa/cli/main)
 
 (defun print-usage ()
   (format *error-output* "Rosa - text labeling language CLI
