@@ -9,5 +9,5 @@ exec ros -Q -- $0 "$@"
 (in-package :rosa.cli)
 
 (defun main (&rest argv)
-  (apply #'rosa/cli:cli-main argv))
+  (apply #'rosa/cli/main:cli-main argv))
 ;;; vim: set ft=lisp lisp:
