@@ -11,10 +11,9 @@ exec ros -Q -m rosa -L sbcl-bin -- $0 "$@"
                               :rosa)
                             :silent t))
 
-(defpackage :rosa.cli
+(defpackage :ros.script.rosa.3705232601
   (:use :cl))
-
-(in-package :rosa.cli)
+(in-package :ros.script.rosa.3705232601)
 
 (defun print-usage ()
   (format *error-output* "Rosa - text labeling language CLI
