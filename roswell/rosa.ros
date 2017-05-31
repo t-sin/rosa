@@ -1,7 +1,7 @@
 #!/bin/sh
 #|-*- mode:lisp -*-|#
 #| Rosa command line front-end
-exec ros -Q -- $0 "$@"
+exec ros -Q -m rosa -L sbcl-bin -- $0 "$@"
 |#
 (defpackage :rosa.cli
   (:use :cl))
