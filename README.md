@@ -275,13 +275,6 @@ Use [roswell](https://github.com/roswell/roswell/).
 $ ros install t-sin/rosa
 ```
 
-If you feel `rosa` command is very slow, compile `rosa`.
-
-```
-$ cd ~/.roswell/bin/
-$ ros build rosa.ros
-```
-
 
 ## Author
 
