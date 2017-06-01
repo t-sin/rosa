@@ -282,7 +282,7 @@ $ ros install t-sin/rosa
 
 ## Copyright
 
-Copyright (c) 2016 Shinichi TANAKA (shinichi.tanaka45@gmail.com)
+Copyright (c) 2017 Shinichi TANAKA (shinichi.tanaka45@gmail.com)
 
 ## License
 
