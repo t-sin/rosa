@@ -20,6 +20,13 @@
   :description "Text labeling language"
   :in-order-to ((test-op (test-op :rosa/tests))))
 
+(defsystem :rosa-cli
+  :class :package-inferred-system
+  :depends-on ("cl-yaml"
+               "inquisitor"
+               "jonathan"
+               "rosa/cli"))
+
 (defsystem :rosa/tests
   :class :package-inferred-system
   :depends-on ("rove"
