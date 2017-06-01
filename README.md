@@ -11,6 +11,15 @@ Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/0
 > Stat rosa pristina nomine, nomina nuda tenemus.
 
 
+## Installation
+
+Use [roswell](https://github.com/roswell/roswell/).
+
+```
+$ ros install t-sin/rosa
+```
+
+
 ## Basis
 
 
@@ -265,15 +274,6 @@ To tell format, use options bellow:
     - Common Lisp plist and vector syntax
 - JSON: `-j`
 - YAML: `-y`
-
-
-## Installation
-
-Use [roswell](https://github.com/roswell/roswell/).
-
-```
-$ ros install t-sin/rosa
-```
 
 
 ## Author
