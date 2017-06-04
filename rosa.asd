@@ -11,13 +11,13 @@
 
 (defsystem :rosa
   :class :package-inferred-system
+  :description "Text labeling language"
   :version "1.0"
   :author "Shinichi TANAKA"
   :license "MIT"
   :depends-on ("alexandria"
                "trivial-gray-streams"
                "rosa/main")
-  :description "Text labeling language"
   :in-order-to ((test-op (test-op :rosa/tests))))
 
 (defsystem :rosa-cli
