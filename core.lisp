@@ -100,6 +100,7 @@
                            (char= (char line 0) #\;)) :do-nothing)
                      (t (otherwise-line line))))))))
 
+(defgeneric indite (data))
 (defmethod indite ((data hash-table))
   "write key-value data into string."
   (with-output-to-string (out)
