@@ -6,9 +6,9 @@
 [![Build Status](https://travis-ci.org/t-sin/rosa.svg)](https://travis-ci.org/t-sin/rosa)
 [![Coverage Status](https://coveralls.io/repos/github/t-sin/rosa/badge.svg?branch=master)](https://coveralls.io/github/t-sin/rosa?branch=master)
 
-Rosa is a text labeling language.
+Rosa is a text labeling language. It provides a notation to embedding meta data into text file, like ID3 tag for mp3.
 
-Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
+For Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
 
 > Stat rosa pristina nomine, nomina nuda tenemus.
 
@@ -21,18 +21,78 @@ Use [roswell](https://github.com/roswell/roswell/).
 $ ros install t-sin/rosa
 ```
 
+## Examples
+
+- write rosa notation, parse it
+
+```lisp
+CL-USER> (setf readme "
+:title Rosa - text labeling language
+:author Shinichi TANAKA
+:modify-month 2016-02
+:modify-month 2017-04
+:body
+
+Rosa is a text labeling language.
+
+Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
+
+> Stat rosa pristina nomine, nomina nuda tenemus.
+
+...")
+
+CL-USER> (with-input-from-string (in readme)
+           (rosa:peruse in))
+; not human readable...
+#<HASH-TABLE :TEST EQL :COUNT 4 {1002704953}>
+
+CL-USER> (with-input-from-string (in readme)
+           (rosa:peruse-as-plist in))
+; wow! readable!
+(:|title| #("Rosa - text labeling language") :|author| #("Shinichi TANAKA")
+ :|modify-month| #("2016-02" "2017-04") :|body|
+ #("
+Rosa is a text labeling language.
+
+Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
+
+> Stat rosa pristina nomine, nomina nuda tenemus.
+
+..."))
+```
+
+- serialize hash table into rosa notation
+
+```lisp
+CL-USRE> (with-input-from-string (in readme)
+           (rosa:indite (rosa:peruse-as-plist in)))
+":title Rosa - text labeling language
+:author Shinichi TANAKA
+:modify-month 2016-02
+:modify-month 2017-04
+:body
+
+Rosa is a text labeling language.
+
+Or for Japanese, see [this article](http:://octahedron.hatenablog.jp/entry/2017/03/24/011008)
+
+> Stat rosa pristina nomine, nomina nuda tenemus.
+
+...
+"
+```
+
 
 ## Basis
 
-
 Rosa is a language to attach meta data on text block.
-Text file written in rosa can be regarded as like a multi-value key-value data.
+It is ID3 tag-like thing for text file.
 
 Here, a pair in rosa data structure, it consist of just one **label** and multiple **bodies**.
 **Bodies** are ordered by appearance from head of text data.
 Because of it, array of **bodies** is simply called **body**.
 
-**Label** is a meta data of **body**.
+**Label** is a name of **body**.
 It is a string represented as regex `[not-space-chars]+`.
 
 **Body** is a value of **label**.
@@ -135,64 +195,7 @@ An example bellow:
 
 To parse plain text as rosa, use one of `rosa:peruse` or `rosa:peruse-as-plist`.
 
-Examples:
-
-```lisp
-CL-USER> (setf readme "
-:title Rosa - text labeling language
-:author Shinichi TANAKA
-:modify-month 2016-02
-:modify-month 2017-04
-:body
-
-Rosa is a text labeling language.
-
-Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
-
-> Stat rosa pristina nomine, nomina nuda tenemus.
-
-...")
-
-CL-USER> (with-input-from-string (in readme)
-           (rosa:peruse in))
-; not human readable...
-#<HASH-TABLE :TEST EQL :COUNT 4 {1002704953}>
-
-CL-USER> (with-input-from-string (in readme)
-           (rosa:peruse-as-plist in))
-; wow! readable!
-(:|title| #("Rosa - text labeling language") :|author| #("Shinichi TANAKA")
- :|modify-month| #("2016-02" "2017-04") :|body|
- #("
-Rosa is a text labeling language.
-
-Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
-
-> Stat rosa pristina nomine, nomina nuda tenemus.
-
-..."))
-```
-
 Rosa can sirialize key-value data. `indite` serialize hash-table and plist into string like this:
-
-```lisp
-CL-USRE> (with-input-from-string (in readme)
-           (rosa:indite (rosa:peruse-as-plist in)))
-":title Rosa - text labeling language
-:author Shinichi TANAKA
-:modify-month 2016-02
-:modify-month 2017-04
-:body
-
-Rosa is a text labeling language.
-
-Or for Japanese, see [this article](http:://octahedron.hatenablog.jp/entry/2017/03/24/011008)
-
-> Stat rosa pristina nomine, nomina nuda tenemus.
-
-...
-"
-```
 
 #### Label equality
 
