@@ -291,4 +291,4 @@ Copyright (c) 2017 Shinichi TANAKA (shinichi.tanaka45@gmail.com)
 
 ## License
 
-Licensed under the MIT License.
+Rosa is licensed under the Lisp GNU Lesser General Public License.
