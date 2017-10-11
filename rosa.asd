@@ -11,7 +11,7 @@
 
 (defsystem :rosa
   :class :package-inferred-system
-  :description "Text labeling language"
+  :description "Text tagging language"
   :version "1.0"
   :author "Shinichi TANAKA"
   :license "MIT"

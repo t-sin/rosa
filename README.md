@@ -1,4 +1,4 @@
-# Rosa - text labeling language
+# Rosa - text tagging language
 
 ![rosa](https://raw.githubusercontent.com/t-sin/rosa/master/rosa.png)
 
@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/t-sin/rosa.svg)](https://travis-ci.org/t-sin/rosa)
 [![Coverage Status](https://coveralls.io/repos/github/t-sin/rosa/badge.svg?branch=master)](https://coveralls.io/github/t-sin/rosa?branch=master)
 
-Rosa is a text labeling language. It provides a notation to embedding meta data into text file, like ID3 tag for mp3.
+Rosa is a text tagging language. It provides a notation to embedding meta data into text file, like ID3 tag for mp3.
 
 For Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
 
@@ -27,13 +27,13 @@ $ ros install t-sin/rosa
 
 ```lisp
 CL-USER> (setf readme "
-:title Rosa - text labeling language
+:title Rosa - text tagging language
 :author Shinichi TANAKA
 :modify-month 2016-02
 :modify-month 2017-04
 :body
 
-Rosa is a text labeling language.
+Rosa is a text tagging language.
 
 Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
 
@@ -49,10 +49,10 @@ CL-USER> (with-input-from-string (in readme)
 CL-USER> (with-input-from-string (in readme)
            (rosa:peruse-as-plist in))
 ; wow! readable!
-(:|title| #("Rosa - text labeling language") :|author| #("Shinichi TANAKA")
+(:|title| #("Rosa - text tagging language") :|author| #("Shinichi TANAKA")
  :|modify-month| #("2016-02" "2017-04") :|body|
  #("
-Rosa is a text labeling language.
+Rosa is a text tagging language.
 
 Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/03/24/011008)
 
@@ -66,13 +66,13 @@ Or for Japanese, see [this article](http://octahedron.hatenablog.jp/entry/2017/0
 ```lisp
 CL-USRE> (with-input-from-string (in readme)
            (rosa:indite (rosa:peruse-as-plist in)))
-":title Rosa - text labeling language
+":title Rosa - text tagging language
 :author Shinichi TANAKA
 :modify-month 2016-02
 :modify-month 2017-04
 :body
 
-Rosa is a text labeling language.
+Rosa is a text tagging language.
 
 Or for Japanese, see [this article](http:://octahedron.hatenablog.jp/entry/2017/03/24/011008)
 
