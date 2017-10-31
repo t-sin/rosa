@@ -7,9 +7,9 @@ exec ros -Q -m rosa -L sbcl-bin -- $0 "$@"
   (ros:ensure-asdf)
   #+quicklisp (ql:quickload '(:cl-yaml
                               :inquisitor
-                              :jonathan
-                              :rosa-cli)
+                              :jonathan)
                             :silent t))
+(asdf:load-system :rosa-cli)
 
 (defpackage :ros.script.rosa.3705232601
   (:use :cl))
