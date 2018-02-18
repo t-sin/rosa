@@ -5,10 +5,7 @@ exec ros -Q -m rosa -L sbcl-bin -- $0 "$@"
 |#
 (progn ;;init forms
   (ros:ensure-asdf)
-  #+quicklisp (ql:quickload '(:cl-yaml
-                              :inquisitor
-                              :jonathan)
-                            :silent t))
+  #+quicklisp (ql:quickload '(:rosa) :silent t))
 (asdf:load-system :rosa-cli)
 
 (defpackage :ros.script.rosa.3705232601
