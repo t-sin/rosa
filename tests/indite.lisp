@@ -26,9 +26,9 @@
   (test-indite `(:|label| #(,(format nil "I hear a voice,~%hear a voice calling out to me")))
                (format nil ":label~%I hear a voice,~%hear a voice calling out to me~%")))
 
-(subtest "escape ':' and ';' in block"
+(subtest "escape ':' in block"
   (test-indite `(:|label| #(,(format nil ":I am Calling, calling now~%;Spirit rise and falling")))
-               (format nil ":label~%::I am Calling, calling now~%:;Spirit rise and falling~%")))
+               (format nil ":label~%::I am Calling, calling now~%;Spirit rise and falling~%")))
 
 (subtest "multiple data"
   (diag "inline - inline")

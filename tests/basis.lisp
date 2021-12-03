@@ -44,7 +44,6 @@ We can consider **Label** as *key* and **body** as *value*.
 ;comment
 
 ::key value
-:;phew, engrish... I'm tired now...
 ")
 
 ;;; peruse API; all data read at once.
@@ -67,9 +66,9 @@ Here, one pair in the set, it consist of **label** and **body**.
 **Label** is a name of **body**.
 We can consider **Label** as *key* and **body** as *value*.
 
+;comment
 
-:key value
-;phew, engrish... I'm tired now..."))
+:key value"))
       hash)
     :test #'equalp)
 
@@ -92,9 +91,9 @@ Here, one pair in the set, it consist of **label** and **body**.
 **Label** is a name of **body**.
 We can consider **Label** as *key* and **body** as *value*.
 
+;comment
 
-:key value
-;phew, engrish... I'm tired now..."))
+:key value"))
     :test #'plist-equal)
 
 ;;; indexing API; listing labels.

@@ -106,9 +106,8 @@ Rosa has an ASCII-based and minimal syntax.
 Here briefly describe rosa syntax.
 For BNF definition, see `SYNTAX.md`.
 
-Rosa treats two characters at line head as special: `:` and `;`.
-**Label** line starts with colon (`:`).
-**Comment** line starts with semicolon (`;`).
+Rosa treats `:` at line head as special.
+**Label** lines starts with colon (`:`).
 
 
 ### Labels
@@ -156,28 +155,11 @@ Although that is ugly. In rosa, we can represent list-thing with shorthand notat
 ```
 
 
-### Comments
-
-Comments can be used.
-It's start with `;`.
-
-An example bellow:
-
-```
-:text1
-
-This line is visible.
-; This line is invisible! Whoa!
-This line is read.
-```
-
-
 ### Escape sequences
 
 To denotes colon and semicolon themselves at line head, use escape sequence.
 
 For colon, this is it: `::`.
-For semicolon, this is it: `:;`.
 
 An example bellow:
 
@@ -185,7 +167,6 @@ An example bellow:
 :text1
 
 :: is read as ':'
-:; is read as ';'
 ```
 
 

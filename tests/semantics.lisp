@@ -6,7 +6,7 @@
         :prove))
 (in-package :rosa/tests/semantics)
 
-(plan 9)
+(plan 8)
 
 
 (defun perusing-test (actual expected)
@@ -188,45 +188,6 @@
   (perusing-test (format nil ":block~%body~% :ignore~%ignored")
                  `(:|block| #(,(format nil "body~% :ignore~%ignored")))))
 
-(subtest "comment"
-  (subtest "comment starts with colon in block body, are ignored"
-    (perusing-test (format nil ":block~%;NGAHHHHHH")
-                   `(:|block| #(,(format nil ""))))
-
-    (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep thought.")
-                   `(:|block| #(,(format nil "oh,~%deep thought."))))
-    (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%;NGAHHHHHH~%deep thought.")
-                   `(:|block| #(,(format nil "oh,~%deep thought."))))
-    (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep~%;NGAHHHHHH~%thought.")
-                   `(:|block| #(,(format nil "oh,~%deep~%thought.")))))
-
-  (subtest "comment starts at line-head"
-      (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep thought.")
-                     `(:|block| #(,(format nil "oh,~%deep thought."))))
-      (perusing-test (format nil ":block~%oh,~% ;NGAHHHHHH~%deep thought.")
-                     `(:|block| #(,(format nil "oh,~% ;NGAHHHHHH~%deep thought.")))))
-
-  (subtest "comment line consists of a couple; string and newline"
-    (perusing-test (format nil ":block~%oh,~%~%;NGAHHHHHH~%~%deep thought.")
-                   `(:|block| #(,(format nil "oh,~%~%~%deep thought."))))
-
-    (subtest "comment line is regarded as empty string"
-      (perusing-test (format nil ":block~%;NGAHHHHHH~%;NGAHHHHHH~%:label body")
-                     `(:|block| #(,(format nil ""))
-                       :|label| #("body")))
-
-      (perusing-test (format nil ":block~%;NGAHHHHHH~%;NGAHHHHHH")
-                     `(:|block| #(,(format nil ""))))
-      (perusing-test (format nil ":block~%;NGAHHHHHH~%;NGAHHHHHH~%")
-                     `(:|block| #(,(format nil ""))))))
-
-  (subtest "when block ends with comment, block body does not include eol"
-    (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep thought.~%;NGAHHHHHH")
-                   `(:|block| #(,(format nil "oh,~%deep thought."))))
-    (perusing-test (format nil ":block~%oh,~%;NGAHHHHHH~%deep thought.~%;NGAHHHHHH~%:label body")
-                   `(:|block| #(,(format nil "oh,~%deep thought."))
-                     :|label| #("body")))))
-
 (subtest "escape sequences"
   (subtest "colon escaping"
     (subtest "escaping is a plain line"
@@ -234,15 +195,15 @@
 
     (subtest "colon escaping in block label"
       (perusing-test (format nil ":block~%:: is colon")
-                     `(:|block| #(,(format nil ": is colon"))))))
+                     `(:|block| #(,(format nil ": is colon")))))
 
-  (subtest "semicolon escaping"
-    (subtest "escaping is a plain line"
-      (perusing-test ":: is colon" nil))
-
-    (subtest "semicolon escaping in block label"
-      (perusing-test (format nil ":block~%:; is semicolon")
-                     `(:|block| #(,(format nil "; is semicolon"))))))
+    (subtest "semicolons are passed through"
+      (perusing-test (format nil ":block~%;test")
+                     `(:|block| #(";test")))
+      (perusing-test (format nil ":block~%; test")
+                     `(:|block| #("; test")))
+      (perusing-test (format nil ":block~%:; test")
+                     `(:|block| #(":; test")))))
 
   (subtest "escaping is elable only at head of line"
     (perusing-test (format nil ":block~%::: is colon colon")
@@ -250,16 +211,14 @@
     (perusing-test (format nil ":block~% :: is colon colon")
                    `(:|block| #(,(format nil " :: is colon colon"))))
 
-    (perusing-test (format nil ":block~%:;; is semicolon semicolon")
-                   `(:|block| #(,(format nil ";; is semicolon semicolon"))))
     (perusing-test (format nil ":block~% :; is colon semicolon")
                    `(:|block| #(,(format nil " :; is colon semicolon")))))
 
   (subtest "escape sequences in a row (issue #12)"
-    (perusing-test (format nil ":block~%:; is semicolon~%:: is colon~%")
-                   `(:|block| #(,(format nil "; is semicolon~%: is colon"))))
-    (perusing-test (format nil ":block~%:; is semicolon~%:: is colon~%::: is colon colon")
-                   `(:|block| #(,(format nil "; is semicolon~%: is colon~%:: is colon colon"))))))
+    (perusing-test (format nil ":block~%:; is colon semicolon~%:: is colon~%")
+                   `(:|block| #(,(format nil ":; is colon semicolon~%: is colon"))))
+    (perusing-test (format nil ":block~%:; is colon semicolon~%:: is colon~%::: is colon colon")
+                   `(:|block| #(,(format nil ":; is colon semicolon~%: is colon~%:: is colon colon"))))))
 
 (subtest "plain line not in block are ignored"
   (perusing-test (format nil ":label text~%foo") '(:|label| #("text")))
