@@ -12,7 +12,7 @@
 (defsystem :rosa
   :class :package-inferred-system
   :description "Text tagging language"
-  :version "1.0"
+  :version "1.0.1"
   :author "Shinichi TANAKA"
   :license "MIT"
   :depends-on ("alexandria"
